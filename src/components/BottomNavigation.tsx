@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { Home, Wallet, Gamepad2, MoreHorizontal } from 'lucide-react';
 
 export type TabType = 'home' | 'finance' | 'games' | 'more';
@@ -10,28 +10,9 @@ interface BottomNavigationProps {
 }
 
 export const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeTab, onChangeTab, desktopExpanded = false }) => {
-  const transitionAudio = useRef<HTMLAudioElement | null>(null);
-
-  useEffect(() => {
-    const audio = new Audio(`${import.meta.env.BASE_URL}assets/sounds/section-change.mp3`);
-    audio.preload = 'auto';
-    audio.volume = 0.22;
-    transitionAudio.current = audio;
-    return () => {
-      audio.pause();
-      transitionAudio.current = null;
-    };
-  }, []);
-
   const changeTab = (tab: TabType) => {
     if (tab === activeTab) return;
 
-    // Start from the click itself so mobile browsers count it as a user gesture.
-    const audio = transitionAudio.current;
-    if (audio) {
-      audio.currentTime = 0;
-      void audio.play().catch(() => undefined);
-    }
     onChangeTab(tab);
   };
 

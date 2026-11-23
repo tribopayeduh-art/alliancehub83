@@ -1,3 +1,4 @@
+import './lib/globalClickSound';
 import {AppErrorBoundary} from './components/AppErrorBoundary';
 import {InexBoot} from './components/InexBoot';
 import {StrictMode} from 'react';
