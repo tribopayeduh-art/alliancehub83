@@ -1,0 +1,8 @@
+import React,{useEffect,useState} from 'react';
+import {requestJson} from '../../lib/requestJson';
+export function AdminLedgerReviews({token}:{token:string}){
+ const [rows,setRows]=useState<any[]>([]),[error,setError]=useState(''),[busy,setBusy]=useState(false);
+ const load=async()=>{setError('');try{const r=await requestJson('/api/admin/deposits/allocation-reviews',{headers:{Authorization:`Bearer ${token}`}});setRows(r.reviews||[]);}catch(e:any){setError(e.message);}};
+ useEffect(()=>{load();},[token]);
+ return <section className="adm-surface" style={{padding:20,marginBottom:18}}><h2 style={{fontSize:16}}>Conciliação de comissões</h2><p style={{fontSize:12,color:'#687483'}}>Depósitos confirmados com configuração de taxas que exige revisão. Corrija a distribuição antes de retomar. Nenhum pagamento é reenviado.</p>{error&&<p role="alert">{error}</p>}<button disabled={busy} onClick={load}>Atualizar pendências</button>{!rows.length&&!error?<p>Nenhuma pendência retornada.</p>:rows.map(r=><article key={r.id} style={{borderTop:'1px solid #e7eaef',padding:'14px 0',display:'flex',gap:12,flexWrap:'wrap',justifyContent:'space-between'}}><div><strong>{(r.amountCents/100).toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}</strong><p style={{fontSize:12}}>{r.reason} · {r.userId}</p></div><button disabled={busy} onClick={async()=>{setBusy(true);try{await requestJson('/api/admin/deposits/allocation-reviews/'+encodeURIComponent(r.id)+'/retry',{method:'POST',headers:{Authorization:`Bearer ${token}`}});await load();}catch(e:any){setError(e.message);}finally{setBusy(false);}}}>Reavaliar taxas</button></article>)}</section>;
+}

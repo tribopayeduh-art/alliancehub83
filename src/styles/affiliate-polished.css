@@ -1,0 +1,33 @@
+.affiliate-hub-view.affiliate-clean{--af-muted:#657181;--af-line:#e6e9ee;max-width:1440px;padding-top:32px!important;line-height:1.55}
+.affiliate-clean .affiliate-hub-heading{padding-bottom:23px;border-bottom:1px solid var(--af-line);margin-bottom:22px!important}
+.affiliate-clean .affiliate-hub-heading h1{font-size:28px;letter-spacing:-1px;font-weight:600}
+.affiliate-clean .affiliate-hub-heading p{max-width:490px;font-size:13px;line-height:1.6}
+.affiliate-clean .af-section-nav{margin-bottom:24px;gap:6px;border:0;background:transparent;padding:0;width:100%;border-bottom:1px solid var(--af-line);border-radius:0}
+.affiliate-clean .af-section-nav button{border-radius:0;padding:12px 18px;border-bottom:2px solid transparent;min-height:48px}
+.affiliate-clean .af-section-nav button[aria-current]{color:var(--af-ink);border-bottom-color:var(--af-ink);font-weight:600;background:transparent}
+.affiliate-clean .affiliate-stat-grid>div{padding:24px;justify-content:flex-start;position:relative;min-height:172px;transition:border-color .18s ease}
+.affiliate-clean .affiliate-stat-grid>div:hover{border-color:#acb5c1}
+.affiliate-clean .affiliate-stat-grid span.font-extrabold{font-size:29px;font-weight:550!important;letter-spacing:-1px}
+.affiliate-clean .affiliate-stat-grid span.font-medium{font-size:12px}
+.affiliate-clean .affiliate-link-card{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,.7fr);column-gap:30px;align-items:center;padding:26px!important}
+.affiliate-clean .affiliate-link-card>div:first-child{grid-column:1/-1;margin-bottom:6px}
+.affiliate-clean .affiliate-link-card>div:nth-child(2){grid-column:1;grid-row:2;margin:0!important;min-height:48px}
+.affiliate-clean .affiliate-link-card .af-invite-help{grid-column:1;grid-row:3;font-size:12px;line-height:1.6;color:var(--af-muted);margin:8px 0 0}
+.affiliate-clean .affiliate-link-card .af-invite-actions{grid-column:2;grid-row:2;display:flex;margin:0!important;gap:8px}
+.affiliate-clean .af-invite-actions button{min-height:48px;flex:1;white-space:normal;padding-inline:14px}
+.affiliate-clean .affiliate-link-card input{border:0!important;background:transparent!important;font-size:13px;box-shadow:none}
+.af-network-heading{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-bottom:16px}
+.af-network-heading h2{font-size:21px;letter-spacing:-.5px;font-weight:600;margin:4px 0}
+.af-network-heading p{font-size:12px;color:var(--af-muted)}
+.af-kicker{font-size:10px;font-weight:600;letter-spacing:1.2px;color:var(--af-muted)}
+.af-network-heading>button{display:inline-flex;gap:8px;align-items:center;justify-content:center;padding:11px 16px;border:1px solid var(--af-line);border-radius:10px;min-height:44px;background:var(--af-card);font-size:12px;cursor:pointer}
+.af-network-summary{display:flex;align-items:center;flex-wrap:wrap;gap:12px 24px;border-block:1px solid var(--af-line);padding:14px 0;margin-bottom:16px;font-size:12px;color:var(--af-muted)}
+.af-network-summary strong{font-size:16px;color:var(--af-ink);font-variant-numeric:tabular-nums;margin-right:3px}
+.af-network-summary span:last-child{margin-left:auto;font-size:11px}
+.affiliate-clean .affiliate-network-list{display:grid;gap:8px}.affiliate-clean .affiliate-network-row{border:1px solid var(--af-line)!important;background:var(--af-card);min-width:0}
+.affiliate-clean .affiliate-ops-kpis strong{font-weight:600}.affiliate-clean .affiliate-ops-header{padding-block:26px!important}
+.affiliate-clean :is(input,select,button){scroll-margin-block:20px}
+@media(min-width:1100px){.affiliate-clean .affiliate-ranking-card{padding:24px}.affiliate-clean .affiliate-network-panel{padding:26px!important}}
+@media(max-width:900px){.affiliate-clean .affiliate-link-card{display:block}.affiliate-clean .affiliate-link-card>div:nth-child(2){margin-top:14px!important}.affiliate-clean .affiliate-link-card .af-invite-actions{margin-top:16px!important}.af-network-summary span:last-child{margin-left:0;width:100%}}
+@media(max-width:600px){.affiliate-hub-view.affiliate-clean{padding-top:18px!important}.affiliate-clean .affiliate-hub-heading{align-items:flex-start;gap:10px;padding-bottom:18px}.affiliate-clean .affiliate-hub-heading h1{font-size:23px;letter-spacing:-.6px}.affiliate-clean .affiliate-hub-heading p{font-size:12px}.affiliate-clean .af-section-nav{justify-content:space-between;gap:0}.affiliate-clean .af-section-nav button{padding:10px 7px;gap:6px;font-size:12px}.affiliate-clean .affiliate-stat-grid{gap:10px}.affiliate-clean .affiliate-stat-grid>div{padding:17px;min-height:154px}.affiliate-clean .affiliate-stat-grid span.font-extrabold{font-size:24px}.affiliate-clean .affiliate-link-card{padding:18px!important}.affiliate-clean .af-invite-actions{display:grid!important;grid-template-columns:1fr}.af-network-heading{align-items:flex-start;flex-direction:column;gap:14px}.af-network-heading>button{width:100%}.af-network-summary{gap:10px 18px}.af-network-summary span{font-size:11px}.affiliate-clean .affiliate-network-panel{padding:16px!important}.affiliate-clean .affiliate-network-row{padding:14px!important}.affiliate-clean :is(.affiliate-network-panel,.affiliate-operations-center){margin-top:18px}}
+@media(prefers-reduced-motion:reduce){.affiliate-clean .affiliate-stat-grid>div{transition:none}}

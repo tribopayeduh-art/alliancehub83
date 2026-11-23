@@ -1,0 +1,7 @@
+Revisão de login e cadastro
+
+Verificados 273 arquivos de imagem PNG/JPEG/WebP/GIF em public pelo decodificador Pillow; nenhum inválido após a correção. Restaurados blocklogo.png a partir de entry-logo.png válido da mesma marca; banner001.png a partir de banner001.jpeg; parabens.png.webp a partir do PNG válido. Logos dos jogos preservados. Nenhuma imagem de resultado financeiro foi inventada.
+
+Aplicados ajustes de espaçamento, contraste, campos de 16px, foco visível, alvos de toque e telas baixas no login/cadastro iNEX. Cadastro com controles independentes mostrar/ocultar senha e confirmação e checklist da regra existente de 6 caracteres. Login tolera armazenamento local indisponível. Formulários React do Block Win com nomes acessíveis, autofill e controle de senha nomeado. Não houve mudança das regras financeiras, termos ou endpoints de autenticação.
+
+Escopo visual: telas React iNEX e Block Win; inventário de imagens cobre todos os diretórios public. Bubble, Subway, GEN DINO e Raspa: estilos compartilhados de acessibilidade, foco, campos 16px, área de toque e altura/rolagem em telas pequenas aplicados somente nas áreas de autenticação. As identidades e lógicas dos jogos foram preservadas. GEN DINO volta a permitir zoom manual. Quatro SVGs de public analisados como XML, sem erros. Compilação e TypeScript executados. Não foi possível validar a renderização em navegador/aparelhos reais neste ambiente; não se declara 100% de cobertura visual. Nenhum cadastro ou pagamento real foi criado. Preserve .env.local e execute npm ci e npm run local.

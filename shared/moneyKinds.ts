@@ -1,0 +1,2 @@
+export function transactionTitle(type:string){return({deposit:'Depósito via PIX',withdrawal:'Saque PIX',commission:'Comissão recebida',win:'Prêmio de jogo',bet:'Entrada de jogo',bonus:'Bônus',adjustment:'Ajuste contábil'} as Record<string,string>)[type]||'Movimentação';}
+export function transactionIncoming(t:{type:string;direction?:string}){return ['deposit','commission','win','bonus'].includes(t.type)||t.type==='adjustment'&&t.direction==='credit';}

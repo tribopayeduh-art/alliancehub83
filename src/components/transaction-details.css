@@ -1,0 +1,21 @@
+.inex-tx-detail{display:grid;gap:14px;color:#253140}
+.inex-tx-total{display:grid;gap:5px;padding:18px;border:1px solid #e4e9ed;border-radius:16px;background:#f6f8fa}
+.inex-tx-total>span,.inex-tx-detail dt,.inex-tx-note,.inex-tx-feedback{font-size:12px;color:#546375}
+.inex-tx-total strong{font-size:29px;font-weight:650;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.inex-tx-total small{display:flex;align-items:center;gap:5px;font-weight:600}
+.inex-tx-detail dl{margin:0}
+.inex-tx-detail dl>div{display:grid;grid-template-columns:minmax(90px,30%) 1fr;gap:10px;align-items:baseline;padding:10px 0;border-bottom:1px solid #edf0f3}
+.inex-tx-detail dd{margin:0;font-size:13px;overflow-wrap:anywhere}
+.inex-tx-actions{display:flex;flex-wrap:wrap;gap:8px}
+.inex-tx-actions button{min-height:44px;display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border:1px solid #dce3eb;border-radius:9px;font-size:12px;font-weight:600}
+.inex-tx-actions button:hover,.inex-tx-actions button[aria-pressed=true]{background:#eef3f6}
+.inex-tx-feedback:empty{display:none}
+.pis-history>button.pis-history-row{display:flex;align-items:center;gap:10px;width:100%;min-height:58px;text-align:left;border-bottom:1px solid #edf0f2;padding:8px 0;color:inherit}
+.pis-history-row>span{flex:1;min-width:0;overflow-wrap:anywhere}
+.pis-history-row>span>*{display:block}
+.pis-history-row>i{display:grid;place-items:center;flex:none;width:32px;height:32px;border-radius:10px;background:#f2f4f6}
+.pis-history-row>b{white-space:nowrap;font-variant-numeric:tabular-nums}
+.pis-history-row small{color:#596777}
+.pis-history-row:hover{background:#f7f9fb}
+.pis-done-art{display:block;width:82px;height:82px;margin:auto}
+.pis-confirmed-details{width:100%;text-align:left}

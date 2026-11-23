@@ -1,0 +1,3 @@
+export type MetricEvent={kind:'deposit'|'ftd'|'signup';amount?:number;createdAt:string};
+export function windowStart(period:string,now=new Date()){const start=new Date(now);start.setHours(0,0,0,0);if(period==='7d')start.setDate(start.getDate()-6);if(period==='30d')start.setDate(start.getDate()-29);return start.getTime();}
+export function periodValue(events:MetricEvent[],kind:MetricEvent['kind'],period:string,now=new Date()){const start=windowStart(period,now);return events.filter(e=>e.kind===kind&&Date.parse(e.createdAt)>=start&&Date.parse(e.createdAt)<=now.getTime()).reduce((sum,e)=>sum+(kind==='deposit'?Number(e.amount||0):1),0);}

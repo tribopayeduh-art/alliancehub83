@@ -1,0 +1,1 @@
+Corrigida a prioridade do servidor: HTML antigo em public não pode substituir as entradas do Vite. Mantida correção de hooks. Preservar .env.local. Executar npm ci e npm run dev com NODE_ENV=development e DEFAULT_APP_PORT=3001. Teste de regressão HTTP reproduz public/index.html antigo e confirma que não é entregue no modo dev. Nenhum pagamento real foi executado.

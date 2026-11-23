@@ -1,0 +1,6 @@
+.finance-clean .finance-influencer-requests,.finance-own-commission-requests{border:1px solid #e3e7ed!important;background:#fff!important;border-radius:14px;padding:20px;color:#384350;box-shadow:none!important;margin-block:18px}
+.finance-influencer-requests :is([class*="bg-amber"],[class*="bg-emerald"],[class*="bg-rose"]){background:#f4f6f8!important;color:#596778!important;border-color:#e2e7ed!important}
+.finance-influencer-requests :is([class*="text-amber"],[class*="text-emerald"],[class*="text-rose"]){color:#697789!important}
+.finance-influencer-requests button{min-height:42px;border-radius:9px;font-weight:500!important}.finance-influencer-requests input{min-height:44px;border:1px solid #dfe5ed!important;border-radius:8px}
+.finance-own-commission-requests h2{font-size:16px;font-weight:600}.finance-own-commission-requests p{font-size:12px;color:#7d8794;margin-top:6px}.finance-own-commission-requests>div{display:flex;align-items:center;justify-content:space-between;gap:15px;border-top:1px solid #edf0f3;margin-top:14px;padding-top:14px;font-size:12px}.finance-own-commission-requests>div span:last-child{font-size:11px;color:#75808e}
+@media(max-width:600px){.finance-clean .finance-influencer-requests,.finance-own-commission-requests{padding:16px}.finance-influencer-requests button{min-height:44px}.finance-influencer-requests input{font-size:16px!important}}

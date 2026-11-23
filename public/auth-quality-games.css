@@ -1,0 +1,10 @@
+/* Shared accessibility and responsive pass. Each game keeps its identity and assets. */
+:is(#bb-auth-modal-wrap,#auth-screen,.auth-mobile,#accountModal) :is(input,select,textarea){font-size:16px!important;line-height:1.5;min-height:48px;max-width:100%;box-sizing:border-box;scroll-margin-block:24px}
+:is(#bb-auth-modal-wrap,#auth-screen,.auth-mobile,#accountModal) :is(button,a){touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+:is(#bb-auth-modal-wrap,#auth-screen,.auth-mobile,#accountModal) :is(button,a,input):focus-visible{outline:2px solid #b7b9cb;outline-offset:3px}
+:is(#bb-auth-modal-wrap,#auth-screen,.auth-mobile,#accountModal) :is(p,label,h1,h2,[role=alert],.authError,.bb-auth-error){overflow-wrap:anywhere}
+:is(#bb-auth-modal-wrap,#auth-screen,.auth-mobile,#accountModal) img{object-fit:contain;max-width:100%}
+#accountModal .authGraphic>img{object-fit:cover}#accountModal .authDialog{max-height:calc(100dvh - 24px);overflow-y:auto}.bb-auth-box{box-sizing:border-box;max-width:min(440px,calc(100vw - 28px))!important}#auth-screen .auth-card{box-sizing:border-box;max-width:100%}
+@media(max-width:600px){:is(#bb-auth-modal-wrap,#auth-screen,.auth-mobile,#accountModal) button{min-height:44px}:is(#bb-auth-modal-wrap,#auth-screen,.auth-mobile,#accountModal) :is(form,.auth-card,.authFormPane){min-width:0}#accountModal .authDialog{width:calc(100vw - 20px);max-height:calc(100dvh - 20px);margin-inline:auto}#accountModal .authFormPane{padding:22px 18px}#bb-auth-modal-wrap{padding:16px 14px max(18px,env(safe-area-inset-bottom));overflow-y:auto}#auth-screen .auth-scroll{padding-bottom:max(24px,env(safe-area-inset-bottom))}.auth-mobile{padding-bottom:max(24px,env(safe-area-inset-bottom))}}
+@media(max-width:350px){#accountModal .authFormPane{padding-inline:14px}.bb-auth-box{padding-inline:16px!important}}
+@media(prefers-reduced-motion:reduce){:is(#bb-auth-modal-wrap,#auth-screen,.auth-mobile,#accountModal) *{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
