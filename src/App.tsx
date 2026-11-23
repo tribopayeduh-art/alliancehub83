@@ -1,3 +1,4 @@
+import { UtmifyIntegration } from './components/UtmifyIntegration';
 import {SupportCenter,SupportTour} from './components/SupportCenter';
 import {requestJson,deadlineFetch as fetch} from './lib/requestJson';
 import { readApiJson } from './lib/readApiJson';
@@ -227,7 +228,7 @@ function AppContent({onGameModeChange}:{onGameModeChange:(value:boolean)=>void})
 
   // Main App State
   const [activeTab, setActiveTab] = useState<TabType>('home');
-  const [subView, setSubView] = useState<'main' | 'affiliates' | 'members' | 'campaigns' | 'partner'>('main');
+  const [subView, setSubView] = useState<'main' | 'affiliates' | 'members' | 'campaigns' | 'partner' | 'utmify'>('main');
   const [gamesResetKey, setGamesResetKey] = useState<number>(0);
 
   // Data State
@@ -1023,7 +1024,12 @@ function AppContent({onGameModeChange}:{onGameModeChange:(value:boolean)=>void})
 
           {appContext!=='countmasters' && activeTab === 'more' && (
             <>
-              {subView === 'campaigns' ? (
+              {subView === 'utmify' ? (
+                <section className="inex-more" aria-label="Notificações UTMify">
+                  <button type="button" onClick={() => setSubView('main')} className="rounded-lg border px-4 py-2 text-sm">← Voltar para Mais</button>
+                  <UtmifyIntegration token={token ?? undefined} />
+                </section>
+              ) : subView === 'campaigns' ? (
                 <CampaignsView
                   onBack={() => setSubView('main')}
                   onShowToast={showToast}
@@ -1062,6 +1068,7 @@ function AppContent({onGameModeChange}:{onGameModeChange:(value:boolean)=>void})
               ) : (
                 <MoreView
                   onOpenSupport={()=>setSupportOpen(true)}
+                  onOpenUtmify={() => setSubView('utmify')}
                   user={user}
                   onOpenProfile={() => setProfileOpen(true)}
                   onOpenAffiliates={() => {

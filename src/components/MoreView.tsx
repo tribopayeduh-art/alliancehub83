@@ -18,6 +18,7 @@ import {
 
 interface MoreViewProps {
   user: User;
+  onOpenUtmify?: () => void;
   onOpenSupport?: () => void;
   onOpenProfile: () => void;
   onOpenAffiliates: () => void;
@@ -34,6 +35,7 @@ interface MoreViewProps {
 
 export const MoreView: React.FC<MoreViewProps> = ({
   user,
+  onOpenUtmify,
   onOpenSupport,
   onOpenProfile,
   onOpenAffiliates,
@@ -51,6 +53,7 @@ export const MoreView: React.FC<MoreViewProps> = ({
   const isApprovedPartner = Boolean((user.isPartner === true && user.partnerApproved === true) || isAdminUser);
 
   const menuSections = [
+    {id:'utmify',label:'Notificações UTMify',description:'Configure os avisos de PIX pendente e pago e consulte os envios',icon:<Bell className="w-5 h-5 text-[#111111]" />,onClick:onOpenUtmify},
     {id:'support',label:'Central de suporte',description:'Diagnóstico da conta, tickets e tutorial opcional',icon:<LifeBuoy size={19}/>,onClick:onOpenSupport},
     ...(onOpenPartnerPanel && isApprovedPartner ? [{
       id: 'partner',
@@ -129,6 +132,6 @@ export const MoreView: React.FC<MoreViewProps> = ({
     },
   ];
 
-  const groups=[{title:'Sua conta',caption:'Tudo que é seu, bem organizado.',ids:['profile','pix-keys','affiliates']},{title:'Sua operação',caption:'Ferramentas para o seu dia a dia.',ids:['partner','admin','campaigns','gateway','members']},{title:'Informações',caption:'Transparência em cada detalhe.',ids:['support','terms','privacy']}];
+  const groups=[{title:'Sua conta',caption:'Tudo que é seu, bem organizado.',ids:['profile','pix-keys','affiliates']},{title:'Sua operação',caption:'Ferramentas para o seu dia a dia.',ids:['partner','admin','campaigns','utmify','gateway','members']},{title:'Informações',caption:'Transparência em cada detalhe.',ids:['support','terms','privacy']}];
   return <div className="inex-more"><header className="clean-heading"><div><span>DO SEU JEITO</span><h1>Seu espaço<span>.</span></h1><p>Conta, ferramentas e preferências.</p></div><span className="more-brand-caption">iNEX</span></header><div className="more-layout"><aside className="more-account"><div className="more-account-orbit"><div>{user.name?.charAt(0)||'U'}</div><span/></div><h2>{user.name}</h2><p>{user.email}</p><span className="more-account-label"><ShieldCheck size={12}/>Sua conta iNEX</span><button onClick={onOpenProfile}>Ver meu perfil <ChevronRight size={14}/></button><div className="more-account-note"><span>✦</span><p>Seu próximo passo começa aqui.<br/>Tudo em um só lugar.</p></div></aside><div className="more-groups">{groups.map(group=>{const items=group.ids.map(id=>menuSections.find(item=>item.id===id)).filter((item):item is NonNullable<typeof item>=>!!item&&typeof item.onClick==='function');return items.length?<section className="more-group" key={group.title}><header><h2>{group.title}</h2><p>{group.caption}</p></header><div className="more-group-items">{items.map(item=><button key={item.id} data-support-step={item.id} onClick={item.onClick} className="more-menu-item"><span className="more-menu-icon">{item.icon}</span><span className="more-menu-copy"><strong>{item.label}</strong><small>{item.description}</small></span><ChevronRight size={15} className="more-menu-chevron"/></button>)}</div></section>:null})}<footer className="more-footer"><span>iNEX · Seu espaço financeiro</span><button onClick={onLogout}><LogOut size={14}/>Sair da conta</button></footer></div></div></div>;
 };
