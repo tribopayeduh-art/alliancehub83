@@ -1,12 +1,17 @@
-// Listen in capture so dialogs, links and controls that stop propagation all use the same effect.
-const clickAudio = new Audio(import.meta.env.BASE_URL + 'assets/sounds/more-click.mp3');
-clickAudio.preload = 'auto';
-clickAudio.volume = 0.25;
+// Keep optional audio out of app initialization, and play only from a real click.
+let clickAudio: HTMLAudioElement | undefined;
 
 document.addEventListener('click', (event) => {
   if (!event.isTrusted || event.button !== 0) return;
 
-  // Playback must start in the user's click handler on browsers that block autoplay.
-  clickAudio.currentTime = 0;
-  void clickAudio.play().catch(() => undefined);
+  try {
+    if (!clickAudio) {
+      clickAudio = new Audio(import.meta.env.BASE_URL + 'assets/sounds/more-click.mp3');
+      clickAudio.volume = 0.25;
+    }
+    clickAudio.currentTime = 0;
+    void clickAudio.play().catch(() => undefined);
+  } catch {
+    // Audio restrictions must not interfere with navigation.
+  }
 }, { capture: true, passive: true });

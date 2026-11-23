@@ -131,7 +131,10 @@
           const title = document.createElement('h2');
           title.textContent = slow ? 'A inicialização está demorando mais que o esperado' : 'Não foi possível iniciar a interface';
           const text = document.createElement('p');
-          text.textContent = 'Reinicie o terminal com npm run local. Se continuar, envie o primeiro erro vermelho da aba Console (F12).';
+          const local = ['localhost', '127.0.0.1', '[::1]'].includes(location.hostname);
+          text.textContent = local
+            ? 'Reinicie o terminal com npm run local. Se continuar, confira o primeiro erro no Console (F12).'
+            : 'Recarregue a página. Se o erro continuar, tente em uma janela anônima.';
           const button = document.createElement('button');
           button.textContent = 'Tentar novamente';
           button.style.cssText = 'padding:12px 20px;border:0;border-radius:8px;background:#28323c;color:white;cursor:pointer';
