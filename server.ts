@@ -2,7 +2,7 @@ import {registerSupport} from './server/supportRoutes.ts';
 import {registerGameRegions} from './server/gameRegions.ts';
 import {recordPixupReversal} from './server/gatewayReversals.ts';
 import {registerHardening,publicUser,distributedAuthLimit} from './server/hardening.ts';
-import {registerUtmifyRoutes,utmTrackingMiddleware,utmContext,drainUtmify} from './server/utmify.ts';
+import {registerUtmifyRoutes,utmTrackingMiddleware,utmContext,drainUtmify,cleanTracking} from './server/utmify.ts';
 import {MIN_COMMISSION_WITHDRAW,validCommissionRequest} from './shared/withdrawalRules.ts';
 import {reviewInfluencer} from './server/influencerReview.ts';
 import {reserveInfluencerCommission} from './server/influencerCommissionReserve.ts';
@@ -811,7 +811,7 @@ async function startServer() {
   app.use('/api', async (req: AuthRequest, res, next) => {
     const publicPaths = new Set(['/health', '/auth/login', '/auth/register', '/auth/refresh', '/push/vapid-public-key', '/public/config']);
     if (publicPaths.has(req.path) || req.path === '/webhooks/dotfy' || req.path === '/webhooks/pix' || req.path === '/webhooks/pixup') return next();
-    if (req.method === 'GET' && /^(?:\/games|\/game\/[^/]+\/config)$/.test(req.path)) return next();
+    if (req.method === 'GET' && (req.path === '/referrals/game-visit' || /^(?:\/games|\/game\/[^/]+\/config)$/.test(req.path))) return next();
     const rawToken = req.headers.authorization?.replace(/^Bearer\s+/i, '').trim()
       || String(req.headers['x-session-token'] || req.body?.token || req.query.token || '');
     let token = rawToken;
@@ -9780,7 +9780,11 @@ CREATE TABLE IF NOT EXISTS system_settings (
         console.warn('Não foi possível registrar o clique de indicação.');
       }
     }
-    return res.redirect(302, '/cadastro?' + new URLSearchParams({ref, game}));
+    const destination = new URLSearchParams({ref, game});
+    for (const [key, value] of Object.entries(cleanTracking(req.query))) {
+      if (value) destination.set(key, value);
+    }
+    return res.redirect(302, '/cadastro?' + destination);
   });
 
   app.get('/api/affiliates/game-clicks', requireAuth, async (req: AuthRequest, res) => {
