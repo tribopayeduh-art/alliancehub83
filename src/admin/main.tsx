@@ -1,4 +1,3 @@
-import '../lib/globalClickSound';
 import {AppErrorBoundary} from '../components/AppErrorBoundary';
 import { readApiJson } from '../lib/readApiJson';
 import React, { StrictMode, useEffect, useState } from 'react';

@@ -3,6 +3,7 @@ let clickAudio: HTMLAudioElement | undefined;
 
 document.addEventListener('click', (event) => {
   if (!event.isTrusted || event.button !== 0) return;
+  if (!(event.target instanceof Element) || !event.target.closest('[data-click-sound="more"]')) return;
 
   try {
     if (!clickAudio) {
