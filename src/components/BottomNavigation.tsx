@@ -47,6 +47,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeTab, o
           return (
             <button
               key={item.id}
+              data-support-step={item.id}
               onClick={() => changeTab(item.id)}
               className={`flex-1 lg:flex-initial flex flex-col lg:flex-row items-center justify-center py-2 lg:py-3 lg:px-7 rounded-xl transition-all cursor-pointer relative ${
                 isActive

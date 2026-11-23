@@ -1,3 +1,4 @@
+import {SupportCenter,SupportTour} from './components/SupportCenter';
 import {requestJson,deadlineFetch as fetch} from './lib/requestJson';
 import { readApiJson } from './lib/readApiJson';
 import {GameBrandContext} from './components/GameBrandContext';
@@ -250,6 +251,7 @@ function AppContent({onGameModeChange}:{onGameModeChange:(value:boolean)=>void})
   const [depositOpen, setDepositOpen] = useState(false);
   const [depositGameId, setDepositGameId] = useState('platform');
   const [withdrawOpen, setWithdrawOpen] = useState(false);
+  const [supportOpen,setSupportOpen]=useState(false),[supportTour,setSupportTour]=useState(false);
   const [termsOpen, setTermsOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [gatewaySettingsOpen, setGatewaySettingsOpen] = useState(false);
@@ -1059,6 +1061,7 @@ function AppContent({onGameModeChange}:{onGameModeChange:(value:boolean)=>void})
                 <MembersAreaView onBack={() => setSubView('main')} />
               ) : (
                 <MoreView
+                  onOpenSupport={()=>setSupportOpen(true)}
                   user={user}
                   onOpenProfile={() => setProfileOpen(true)}
                   onOpenAffiliates={() => {
@@ -1084,6 +1087,8 @@ function AppContent({onGameModeChange}:{onGameModeChange:(value:boolean)=>void})
           </div>
         </main>
 
+        {token&&<SupportCenter token={token} open={supportOpen} onClose={()=>setSupportOpen(false)} onTutorial={()=>{setSupportOpen(false);setSupportTour(true);}}/>}
+        {supportTour&&<SupportTour onClose={()=>{setSupportTour(false);setSupportOpen(true);}} onStep={key=>{setActiveTab(['home','finance','games','more'].includes(key)?key as TabType:'more');setSubView('main');}}/>}
         {/* Bottom Navigation */}
         {!gameVisible && !partnerPanelOpen && subView !== 'partner' && !(activeTab === 'more' && subView === 'affiliates') && <BottomNavigation
           activeTab={activeTab}

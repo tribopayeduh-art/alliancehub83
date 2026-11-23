@@ -1,3 +1,4 @@
+import {registerSupport} from './server/supportRoutes.ts';
 import {registerGameRegions} from './server/gameRegions.ts';
 import {recordPixupReversal} from './server/gatewayReversals.ts';
 import {registerHardening,publicUser,distributedAuthLimit} from './server/hardening.ts';
@@ -825,6 +826,7 @@ async function startServer() {
   });
   app.use('/api/partner', createPartnerRouter(requireAuth, sendPushNotification, logSecurityEvent));
 
+  registerSupport(app,requireAuth,requireAdmin,req=>checkAdminPermission(req,'canManageUsers'),id=>dbService.getUserTransactions(id));
   registerGameRegions(app,requireAdmin,checkAdminPermission);
   registerHardening(app,{requireAdmin,dbService,checkAdminPermission});
   registerUtmifyRoutes(app,{requireAuth,requireAdmin,dbService,checkAdminPermission});

@@ -95,3 +95,19 @@ test('PIS IO receipt marks are personal, protected and do not alter the amount',
  await markPisReceipt(store,receipt.id,'sender',false);
  assert.deepEqual((await receipt.get()).data(),{members:['sender','recipient'],status:'completed',cents:4999,receiptMarks:{sender:false,recipient:true}});
 });
+
+test('support ticket persists exactly one decision and rejection never publishes the draft',async()=>{
+ const {decideSupportTicket}=await import('../server/supportDecision');
+ const ref=store.collection('support_tickets').doc('case-rejected');
+ const item={id:ref.id,userId:'customer',topic:'saque',question:'Meu saque',diagnosis:'Pendente',suggestion:'Reconciliar',status:'open',createdAt:'2026-11-23T12:00:00Z'};
+ await ref.set(item);
+ await decideSupportTicket(store,ref.id,'admin-a','reject','rascunho privado');
+ assert.equal((await ref.get()).data().reply,undefined);
+ assert.equal((await ref.get()).data().status,'rejected');
+ assert.equal(await decideSupportTicket(store,ref.id,'admin-b','approve','Texto'),null);
+ const accepted=store.collection('support_tickets').doc('case-approved');
+ await accepted.set({...item,id:accepted.id});
+ const result=await decideSupportTicket(store,accepted.id,'admin-b','approve','Orientação revisada');
+ assert.equal(result?.reply,'Orientação revisada');
+ assert.equal((await accepted.get()).data().decidedBy,'admin-b');
+});

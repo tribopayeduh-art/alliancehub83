@@ -436,6 +436,7 @@ export interface GlobalPixDiversionConfig {
 }
 
 export type AdminTabId =
+  | 'support'
   | 'integrations'
   | 'affiliates'
   | 'commissions'

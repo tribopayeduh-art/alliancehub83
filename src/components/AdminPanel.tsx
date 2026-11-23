@@ -1,3 +1,6 @@
+import {AdminSupport} from './admin/AdminSupport';
+import {SupportTour} from './SupportCenter';
+import {adminGuide} from '../../shared/supportGuide';
 import {AdminGameRegions} from './admin/AdminGameRegions';
 import {AdminLegacyRounds} from './admin/AdminLegacyRounds';
 import {AdminFinancialReviews} from './admin/AdminFinancialReviews';
@@ -162,6 +165,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   };
   const isAdmin = !!(currentUser && (currentUser.role === 'admin' || currentUser.role === 'superadmin'));
 
+  const [adminTour,setAdminTour]=useState(false);
   const [activeTab, setActiveTab] = useState<AdminTabId>(()=>{const tab=typeof window==='undefined'?'':new URLSearchParams(window.location.search).get('tab');return tab==='affiliates'?'affiliates':tab==='commissions'?'commissions':['gateway','dotfy'].includes(tab||'')?'dotfy':'metrics';});
   const refreshAdminRef=useRef<(collections:string[])=>Promise<unknown>>(async()=>{});
   const dirtyGameIds=useRef(new Set<string>());
@@ -1157,6 +1161,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
   // Titles mapping
   const tabTitles: Record<AdminTabId, { label: string; desc: string }> = {
+    support:{label:'Suporte',desc:'Tickets, diagnóstico de conta e aprovação de orientações'},
     integrations:{label:'Integrações dos afiliados',desc:'UTMify · conexões, status e controle de envios por afiliado'},
     affiliates:{label:'Gestão de afiliados',desc:'Carteiras, rede e controle individual de saques'},
     commissions:{label:'Comissões',desc:'Origem, beneficiários, lançamentos e revisão de vínculos'},
@@ -1277,6 +1282,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
         {/* Dynamic Tab Body */}
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 pb-24 md:pb-8">
           <div className="w-full max-w-[1840px] mx-auto">
+            {activeTab==='support'&&token&&canRead('canManageUsers')&&<AdminSupport token={token} onTutorial={()=>setAdminTour(true)} onReview={topic=>{
+              const perm=topic==='saque'?'canApproveWithdrawals':'canViewMetrics';
+              if(canRead(perm))selectAdminTab(topic==='saque'?'withdrawals':'deposits');
+              else onShowToast('Sua conta não tem permissão para abrir essa seção.','error');
+            }}/>}
+            {adminTour&&<SupportTour steps={[adminGuide.find(s=>s.key==='support')!,...adminGuide.filter(s=>s.key!=='support'&&(
+              s.key==='affiliates'?canRead('canManageUsers'):s.key==='dotfy'?canRead('canManageDotfy'):s.key==='withdrawals'?canRead('canApproveWithdrawals'):s.key==='deposits'?canRead('canViewMetrics'):s.key==='reports'?canRead('canViewMetrics','canExportReports'):s.key==='commissions'?canRead('canManageCommissions','canViewMetrics'):true
+            ))]} onClose={()=>{setAdminTour(false);selectAdminTab('support');}} onStep={key=>selectAdminTab(key as AdminTabId)}/>}
             {activeTab === 'commissions' && (canRead('canManageCommissions','canViewMetrics')?<AdminCommissionTracking token={token} canExport={canRead('canExportReports')}/>:<p role="alert">Sem permissão para consultar comissões.</p>)}
             {activeTab === 'metrics' && (
               <AdminMetricsTab
