@@ -45,6 +45,8 @@ export async function stageUtmify(tx:any,charge:any,current:any,user:any,paid:bo
  };
 }
 export async function utmifyRequest(token:string,payload:any,queryDashboard?:string,send:typeof fetch=globalThis.fetch){
+ if(!token.trim())throw Object.assign(err('Não foi possível ler a credencial salva. Confira a chave de criptografia do servidor e salve a credencial novamente.',409),{code:'CREDENTIAL_UNREADABLE'});
+
  const response=await send(queryDashboard?`https://query-api.utmify.com.br/public-api/v1/dashboards/${encodeURIComponent(queryDashboard)}/summary`:'https://api.utmify.com.br/api-credentials/orders',{method:'POST',headers:{'Content-Type':'application/json','User-Agent':'iNEX-Integration/1.0',...(queryDashboard?{'Authorization':`Bearer ${token}`}:{'x-api-token':token})},body:JSON.stringify(payload),signal:AbortSignal.timeout(8000)});
  let data:any;try{data=await response.json();}catch{throw Object.assign(err('UTMify retornou uma resposta inválida.',response.status>=400?response.status:502),{retry:response.status<400||response.status===429||response.status>=500,code:'INVALID_RESPONSE'});}
  if(!data||typeof data!=='object'||Array.isArray(data))throw Object.assign(err('Resposta UTMify inválida.',502),{retry:true,code:'INVALID_RESPONSE'});
@@ -60,7 +62,7 @@ export async function drainUtmify(ownerId?:string,store:any=supabaseStore,send:t
  for(const s of rows.docs){if(count>=maxBatch)break;const preview=s.data();if(chargeId&&preview.chargeId!==chargeId)continue;if(ownerId&&preview.ownerId!==ownerId)continue;if(Number(preview.nextAttemptAt)>Date.now()||Number(preview.leaseUntil)>Date.now())continue;
   const lease=crypto.randomUUID(),job=await store.runTransaction(async(tx:any)=>{const j=(await tx.get(s.ref)).data();if(!j||j.state!=='pending'||Number(j.nextAttemptAt)>Date.now()||Number(j.leaseUntil)>Date.now())return null;const c=(await tx.get(store.collection('utmify_integrations').doc(j.ownerId))).data();if(!c?.enabled||!c.tokenEncrypted||c.adminPaused)return null;tx.update(s.ref,{lease,leaseUntil:Date.now()+60000,attempts:Number(j.attempts||0)+1});return {...j,token:decryptSensitiveData(c.tokenEncrypted)};});
   if(!job)continue;count++;let failure:any;
-  try{if(Date.now()-Date.parse(job.payload.createdAt.replace(' ','T')+'Z')>(job.payload.status==='refunded'?45:7)*86400000)throw Object.assign(err('Pedido fora da janela de 7 dias.',422),{code:'ORDER_TOO_OLD'});await utmifyRequest(job.token,job.payload,undefined,send);}catch(e:any){failure=e;}
+  try{if(!job.token)throw Object.assign(err('A credencial salva não pôde ser lida.',409),{code:'CREDENTIAL_UNREADABLE'});if(Date.now()-Date.parse(job.payload.createdAt.replace(' ','T')+'Z')>(job.payload.status==='refunded'?45:7)*86400000)throw Object.assign(err('Pedido fora da janela de 7 dias.',422),{code:'ORDER_TOO_OLD'});await utmifyRequest(job.token,job.payload,undefined,send);}catch(e:any){failure=e;}
   await store.runTransaction(async(tx:any)=>{const current=(await tx.get(s.ref)).data();if(current?.lease!==lease)return;const changed=current.revision!==job.revision;tx.update(s.ref,changed?{leaseUntil:0}:failure?{leaseUntil:0,state:(failure.retry||!failure.status)&&current.attempts<12?'pending':'failed',lastError:failure.code||'DELIVERY_FAILED',nextAttemptAt:Date.now()+1000*(failure.retryAfter||Math.min(3600,30*2**Math.min(current.attempts,7)))}:{leaseUntil:0,state:'sent',sentStatus:job.payload.status,sentAt:new Date().toISOString(),lastError:null});});
  }
  return {processed:count};
