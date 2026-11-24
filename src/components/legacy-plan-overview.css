@@ -82,3 +82,35 @@
 .legacy-hero-footer button:hover{transform:translateY(-2px)}.legacy-hero-footer button:active{transform:scale(.98)}
 .legacy-hero-footer span{color:#c7d2e7;font-size:11px}.legacy-delta dd span{display:inline-block;animation:plan-in .2s ease both}
 @keyframes legacy-gauge-in{from{stroke-dasharray:0 100}to{stroke-dasharray:85 100}}
+
+@media (min-width: 1024px) {
+  .affiliate-plans.legacy-plan {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas:
+      "top top"
+      "intro intro"
+      "current simulator"
+      "escale simulator"
+      "benefits benefits";
+    align-content: start;
+    grid-template-rows: auto auto auto 1fr auto;
+    gap: 18px 24px;
+    max-width: none;
+    padding: 24px max(32px, calc((100% - 1400px) / 2)) 48px;
+    background: #f7f8fb;
+  }
+
+  .legacy-plan .plan-top { grid-area: top; }
+  .legacy-plan .legacy-intro { grid-area: intro; margin: 8px 0 0; }
+  .legacy-plan .legacy-current-line { grid-area: current; margin: 0; }
+  .legacy-plan .legacy-hero {
+    grid-area: escale;
+    grid-template-columns: minmax(0, 1fr) clamp(96px, 10vw, 148px);
+    align-content: center;
+  }
+  .legacy-plan .legacy-simulator { grid-area: simulator; margin: 0; align-content: start; }
+  .legacy-plan .legacy-perks { grid-area: benefits; margin: 0; }
+  .legacy-plan .legacy-perks > div { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .legacy-plan .legacy-simulator dd { font-size: 19px; }
+}
