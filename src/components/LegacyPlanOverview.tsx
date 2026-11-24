@@ -1,5 +1,5 @@
 import {useId,useState} from 'react';
-import {ArrowLeft,ArrowUpRight,Check,Gamepad2,Headphones,Sparkles,TrendingUp} from 'lucide-react';
+import {ArrowLeft,ArrowUpRight,Check,Gamepad2,Headphones,TrendingUp} from 'lucide-react';
 import {findAffiliatePlan,planDifference} from '../../shared/affiliatePlans';
 import {Modal} from './Modal';
 import './affiliate-plans.css';
@@ -21,7 +21,7 @@ export function LegacyPlanOverview({onBack}:{onBack:()=>void}){
  const next=Math.floor(base*100*escale.commissionPercent/100)/100;
  return <main className="affiliate-plans legacy-plan">
    <div className="plan-top"><strong>iNEX / Meu plano</strong><button type="button" onClick={onBack}><ArrowLeft size={16}/> Mais</button></div>
-   <header><span className="plan-kicker">CENTRAL DE PLANOS</span><h1>Meu plano</h1><p>Confira seu acesso e compare as opções para sua operação.</p></header>
+   <header><span className="plan-kicker">AFILIADOS / PLANOS</span><h1>Meu plano</h1><p>Veja seu acesso atual e o que muda com o Escale.</p></header>
    <div className="legacy-tier-grid">
     <article className="legacy-tier">
      <span className="legacy-tag"><Check size={14}/> Plano atual</span><h2>{alliance.name}</h2>
@@ -29,9 +29,9 @@ export function LegacyPlanOverview({onBack}:{onBack:()=>void}){
      <p>Seu acesso está incluído, sem novo pagamento.</p>
     </article>
     <article className="legacy-tier legacy-premium">
-     <span className="legacy-tag"><Sparkles size={14}/> Próximo nível</span><h2>{escale.name}</h2>
+     <span className="legacy-tag">Escale / Upgrade</span><h2>{escale.name}</h2>
      <strong>{escale.commissionPercent}% <small>comissão padrão</small></strong>
-     <p>Mais jogos e atendimento prioritário.</p>
+     <p>Mais jogos e atendimento humano prioritário.</p><span className="legacy-rate-chip">+10 pontos percentuais</span>
      <button type="button" className="plan-upgrade" onClick={()=>setDetails(true)}>Conhecer o Escale <ArrowUpRight size={17}/></button>
     </article>
    </div>
@@ -40,15 +40,21 @@ export function LegacyPlanOverview({onBack}:{onBack:()=>void}){
      <div><h2 id="legacy-simulator-title">Compare a comissão</h2><p>Use uma base hipotética para comparar as taxas padrão.</p></div>
      <label htmlFor={slider}>Base elegível simulada <strong>{brl.format(base)}</strong></label>
      <input type="range" id={slider} min={100} max={10000} step={100} value={base} aria-valuetext={brl.format(base)} onChange={e=>setBase(Number(e.currentTarget.value))}/>
-     <dl><div><dt>Alliance · 75%</dt><dd>{brl.format(current)}</dd></div><div><dt>Escale · 85%</dt><dd>{brl.format(next)}</dd></div><div className="legacy-delta"><dt>Diferença estimada</dt><dd>+{brl.format(next-current)}</dd></div></dl>
+     <div className="legacy-presets" aria-label="Valores rápidos">{[1000,3000,5000].map(value=><button type="button" key={value} aria-pressed={base===value} onClick={()=>setBase(value)}>{brl.format(value)}</button>)}</div>
+     <dl><div><dt>Alliance · 75%</dt><dd>{brl.format(current)}</dd><span className="legacy-meter legacy-meter-alliance" aria-hidden="true"/> </div><div><dt>Escale · 85%</dt><dd>{brl.format(next)}</dd><span className="legacy-meter legacy-meter-escale" aria-hidden="true"/></div><div className="legacy-delta"><dt>Diferença estimada</dt><dd>+{brl.format(next-current)}</dd></div></dl>
      <p className="legacy-note">Simulação bruta antes de eventuais divisões. Taxas personalizadas e valores reais podem variar.</p>
    </section>
    <section className="legacy-perks" aria-labelledby="escale-perks"><h2 id="escale-perks">O que muda no Escale</h2>
     <div>{features.map(({icon:Icon,title,detail})=><article key={title}><div className="legacy-section-icon"><Icon size={19}/></div><div><h3>{title}</h3><p>{detail}</p></div></article>)}</div>
    </section>
    <Modal isOpen={details} onClose={()=>setDetails(false)} title="Upgrade para Escale">
-    <div className="legacy-upgrade-detail"><Sparkles size={24}/><h3>{escale.commissionPercent}% de comissão padrão</h3><p>A diferença entre os preços de tabela do Alliance e do Escale é de <strong>{brl.format(planDifference('escale','alliance')/100)}</strong>.</p>
-    <p role="status">O checkout do upgrade ainda não está disponível. Seu acesso atual permanece ativo.</p><button type="button" className="plan-upgrade" onClick={()=>setDetails(false)}>Voltar à comparação</button></div>
+    <div className="legacy-upgrade-detail">
+      <div className="legacy-modal-rate"><span>Comissão padrão</span><strong>75% <ArrowUpRight size={21} aria-hidden="true"/> <b>85%</b></strong></div>
+      <ul>{features.slice(1).map(({icon:Icon,title})=><li key={title}><Icon size={17}/>{title}</li>)}</ul>
+      <div className="legacy-modal-price"><span>Diferença entre os preços de tabela</span><strong>{brl.format(planDifference('escale','alliance')/100)}</strong></div>
+      <p role="status">Checkout ainda indisponível. Seu Alliance segue ativo.</p>
+      <button type="button" className="plan-upgrade" onClick={()=>setDetails(false)}>Voltar à comparação <ArrowLeft size={16}/></button>
+    </div>
    </Modal>
  </main>;
 }
