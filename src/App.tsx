@@ -976,6 +976,13 @@ function AppContent({onGameModeChange}:{onGameModeChange:(value:boolean)=>void})
     );
   }
 
+  if(!planRequired&&activeTab==='more'&&subView==='plans'){
+    return <main className="affiliate-plans">
+      <div className="plan-top"><strong>iNEX / Afiliados</strong><button type="button" onClick={()=>setSubView('main')}>← Voltar para Mais</button></div>
+      <header><span className="plan-kicker">ACESSO MANTIDO</span><h1>Meu plano</h1><p>Sua conta atual está isenta de contratar um plano. Você pode continuar usando o iNEX sem novo pagamento.</p></header>
+    </main>;
+  }
+
   if(planRequired&&token&&(!planAccount||planAccount.required||activeTab==='more'&&subView==='plans')){
     if(!planAccount)return <main className="affiliate-plans"><h1>{planError?'Não foi possível consultar seu plano':'Consultando seu plano…'}</h1>{planError&&<><p role="alert">{planError}</p><button type="button" onClick={()=>void reloadPlan().catch(e=>setPlanError(e.message))}>Tentar novamente</button></>}<button type="button" onClick={()=>void handleLogout()}>Sair</button></main>;
     return <AffiliatePlans initialPlan={offerUpgrade?'escale':undefined} token={token} account={planAccount} reload={reloadPlan} onExit={()=>void handleLogout()} onBack={planAccount.required?undefined:()=>{setOfferUpgrade(false);setSubView('main');}}/>;
@@ -1112,7 +1119,7 @@ function AppContent({onGameModeChange}:{onGameModeChange:(value:boolean)=>void})
                 <MoreView
                   onOpenSupport={()=>setSupportOpen(true)}
                   onOpenUtmify={() => setSubView('utmify')}
-                  onOpenPlans={planRequired ? () => setSubView('plans') : undefined}
+                  onOpenPlans={() => setSubView('plans')}
                   user={user}
                   onOpenProfile={() => setProfileOpen(true)}
                   onOpenAffiliates={() => {
