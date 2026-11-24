@@ -224,6 +224,41 @@ function AppContent({onGameModeChange}:{onGameModeChange:(value:boolean)=>void})
   const [authError, setAuthError] = useState<string | null>(null);
   const [initialRefCode, setInitialRefCode] = useState<string>('');
 
+  const isHubAuthHost = ['goalliancehub.com', 'www.goalliancehub.com'].includes(window.location.hostname);
+  const [hubPath, setHubPath] = useState(() => window.location.pathname.replace(/\/$/, '') || '/');
+  const navigateHubAuth = (view: 'login' | 'register') => {
+    setAuthError(null);
+    setAuthView(view);
+    if (!isHubAuthHost) return;
+    const path = view === 'login' ? '/login' : '/cadastro';
+    if (hubPath !== path) window.history.pushState(null, '', path + window.location.search);
+    setHubPath(path);
+  };
+
+  useEffect(() => {
+    if (!isHubAuthHost) return;
+    const sync = () => {
+      const path = window.location.pathname.replace(/\/$/, '') || '/';
+      setHubPath(path);
+      if (path === '/cadastro' || path === '/register') setAuthView('register');
+      else if (path === '/login' || path === '/painel') setAuthView('login');
+      setAuthError(null);
+    };
+    window.addEventListener('popstate', sync);
+    return () => window.removeEventListener('popstate', sync);
+  }, [isHubAuthHost]);
+
+  useEffect(() => {
+    if (!isHubAuthHost || authLoading || authRestoreError) return;
+    const authPath = ['/login', '/cadastro', '/register'].includes(hubPath);
+    const destination = user && authPath ? '/painel' : !user && hubPath === '/painel' ? '/login' : null;
+    if (!destination) return;
+    window.history.replaceState(null, '', destination + (user ? '' : window.location.search));
+    setHubPath(destination);
+    if (!user) setAuthView('login');
+  }, [isHubAuthHost, hubPath, authLoading, authRestoreError, user]);
+
+
   // Real-time tracking of known transactions for affiliate sale notifications
   const knownTxIdsRef = useRef<Set<string> | null>(null);
   const knownIndicationsCountRef = useRef<number | null>(null);
@@ -318,7 +353,7 @@ function AppContent({onGameModeChange}:{onGameModeChange:(value:boolean)=>void})
     try {
       const url = new URL(window.location.href);
       if (url.pathname.startsWith('/parceiro') || url.pathname.startsWith('/partner') || url.pathname.startsWith('/parceiros')) {
-        window.history.replaceState({}, '', '/');
+        window.history.replaceState({}, '', isHubAuthHost ? '/painel' : '/');
       }
     } catch (e) {}
   };
@@ -953,7 +988,7 @@ function AppContent({onGameModeChange}:{onGameModeChange:(value:boolean)=>void})
           {authView === 'login' ? (
             <LoginView
               onLogin={handleLogin}
-              onNavigateToRegister={() => setAuthView('register')}
+              onNavigateToRegister={() => navigateHubAuth('register')}
               onForgotPassword={() =>
                 showToast('Instruções de recuperação foram enviadas.', 'info')
               }
@@ -963,7 +998,7 @@ function AppContent({onGameModeChange}:{onGameModeChange:(value:boolean)=>void})
           ) : (
             <RegisterView
               onRegister={handleRegister}
-              onNavigateToLogin={() => setAuthView('login')}
+              onNavigateToLogin={() => navigateHubAuth('login')}
               onOpenTerms={() => setTermsOpen(true)}
               loading={actionLoading}
               error={authError}

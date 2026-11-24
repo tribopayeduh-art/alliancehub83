@@ -16,6 +16,16 @@
   ],
   "rewrites": [
     {
+      "source": "/painel",
+      "has": [
+        {
+          "type": "host",
+          "value": "(?:www\\.)?goalliancehub\\.com"
+        }
+      ],
+      "destination": "/index.html"
+    },
+    {
       "source": "/",
       "has": [
         {
