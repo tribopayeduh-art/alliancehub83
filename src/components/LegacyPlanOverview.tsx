@@ -18,6 +18,7 @@ export function LegacyPlanOverview({onBack}:{onBack:()=>void}){
  const [base,setBase]=useState(1000);
  const [details,setDetails]=useState(false);
  const slider=useId();
+ const modalSlider=useId();
  const current=Math.floor(base*100*alliance.commissionPercent/100)/100;
  const next=Math.floor(base*100*escale.commissionPercent/100)/100;
  return <main className="affiliate-plans legacy-plan">
@@ -56,8 +57,15 @@ export function LegacyPlanOverview({onBack}:{onBack:()=>void}){
    </section>
    <Modal isOpen={details} onClose={()=>setDetails(false)} title="Upgrade para Escale">
     <div className="legacy-upgrade-detail">
-      <div className="legacy-modal-rate"><span>Comissão padrão</span><strong>75% <ArrowUpRight size={21} aria-hidden="true"/> <b>85%</b></strong></div>
-      <ul>{features.slice(1).map(({icon:Icon,title})=><li key={title}><Icon size={17}/>{title}</li>)}</ul>
+      <section className="escale-preview" aria-label="Simulador de comissão">
+        <div className="escale-preview-head"><span>Comissão padrão</span><b>+{escale.commissionPercent-alliance.commissionPercent} p.p.</b></div>
+        <div className="escale-preview-rates"><strong>{alliance.commissionPercent}%</strong><ArrowUpRight size={20} aria-hidden="true"/><strong>{escale.commissionPercent}%</strong></div>
+        <label htmlFor={modalSlider}>Base simulada <strong>{brl.format(base)}</strong></label>
+        <input id={modalSlider} type="range" min={100} max={10000} step={100} value={base} aria-valuetext={brl.format(base)} onChange={e=>setBase(Number(e.currentTarget.value))}/>
+        <div className="escale-preview-result"><span>Diferença estimada</span><strong key={base}>+{brl.format(next-current)}</strong></div>
+        <p>Simulação bruta. A comissão real pode variar.</p>
+      </section>
+      <div className="escale-perk-list">{features.slice(1).map(({icon:Icon,title,detail})=><details key={title}><summary><Icon size={17} aria-hidden="true"/>{title}</summary><p>{detail}</p></details>)}</div>
       <div className="legacy-modal-price"><span>Diferença entre os preços de tabela</span><strong>{brl.format(planDifference('escale','alliance')/100)}</strong></div>
       <p role="status">O pagamento do upgrade ainda não está disponível.</p>
       <button type="button" className="plan-upgrade" onClick={()=>setDetails(false)}>Voltar à comparação <ArrowLeft size={16}/></button>

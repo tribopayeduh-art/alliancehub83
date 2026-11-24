@@ -121,3 +121,21 @@
   .legacy-plan .legacy-perks > div { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .legacy-plan .legacy-simulator dd { font-size: 19px; }
 }
+
+.escale-preview{width:100%;padding:16px;border-radius:15px;background:linear-gradient(140deg,#182439,#2d4263);color:#fff;display:grid;gap:9px;font-size:13px}
+.escale-preview-head,.escale-preview label,.escale-preview-result{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.escale-preview-head b{padding:3px 8px;border-radius:6px;background:#fff2}
+.escale-preview-rates{display:flex;align-items:center;gap:12px;color:#c1d3f3;font-size:clamp(26px,6vw,37px);line-height:1.1}
+.escale-preview-rates strong:last-child{color:#fff}
+.escale-preview input{width:100%;min-height:24px;accent-color:#c0d4fb}
+.escale-preview-result{padding-top:9px;border-top:1px solid #fff4}
+.escale-preview-result strong{font-size:17px;font-variant-numeric:tabular-nums;animation:plan-in .16s ease both}
+.escale-preview p{font-size:11px;color:#d3def0;margin:0}
+.escale-perk-list{width:100%;display:grid;gap:6px}
+.escale-perk-list details{border:1px solid #e3e7ef;border-radius:9px;padding:0 10px}
+.escale-perk-list summary{cursor:pointer;min-height:42px;display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px;list-style:none}
+.escale-perk-list summary::-webkit-details-marker{display:none}
+.escale-perk-list summary::after{content:"+";margin-inline-start:auto;color:#425675;font-size:18px}
+.escale-perk-list details[open] summary::after{content:"−"}
+.escale-perk-list details p{margin:0 0 10px 25px;font-size:13px;color:#505b6c}
+@media(prefers-reduced-motion:reduce){.escale-preview-result strong{animation:none}}
