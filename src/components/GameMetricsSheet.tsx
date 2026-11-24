@@ -1,3 +1,4 @@
+import './game-metrics-desktop.css';
 import React, {useEffect, useState} from 'react';
 import {Modal} from './Modal';
 import {UserPlus, CheckCircle2, Users, TrendingUp, Send, ArrowDownLeft, MousePointer2} from 'lucide-react';
@@ -40,8 +41,8 @@ export function GameMetricsSheet({game,gameId,authToken,metrics,onClose,onShare}
     {label:'Influenciadores',value:metrics.influencers,Icon:Users},
     {label:'Cadastro → depósito',value:metrics.conversion.toLocaleString('pt-BR',{maximumFractionDigits:1})+'%',Icon:TrendingUp},
   ] : [];
-  return <Modal isOpen onClose={onClose} title="Desempenho do jogo" maxWidth={580}>
-    <div className="inex-game-metrics">
+  return <Modal isOpen onClose={onClose} title="Desempenho do jogo" className="gm-dialog">
+    <div className={`inex-game-metrics ${metrics ? "gm-has-metrics" : ""}`}>
       <div className="gm-identity"><img src={game.image} alt=""/><div><span>SUAS INDICAÇÕES</span><h2>{game.title}</h2><p>Acompanhe os resultados da sua rede neste jogo.</p></div></div>
       <section className="gm-clicks" aria-labelledby="gm-click-title">
         <h3 id="gm-click-title"><MousePointer2 size={16}/> Cliques no link</h3>
@@ -55,12 +56,12 @@ export function GameMetricsSheet({game,gameId,authToken,metrics,onClose,onShare}
               <details className="gm-click-daily"><summary>Ver cliques por dia (UTC)</summary><ul>{[...clicks.days].reverse().map(day=><li key={day.date}><time dateTime={day.date}>{dayLabel(day.date)}</time><span>{number.format(day.count)}</span></li>)}</ul></details>
             </> : <p>Nenhum clique registrado nos últimos 30 dias.</p>}
           </>}
-        <p className="gm-click-note">Os cliques começam a contar com os novos links copiados aqui. Reaberturas no mesmo navegador em até 30 minutos não contam novamente se os cookies estiverem ativos.</p>
+        <details className="gm-click-rules"><summary>Como os cliques são contados</summary><p className="gm-click-note">Os cliques começam a contar com os novos links copiados aqui. Reaberturas no mesmo navegador em até 30 minutos não contam novamente se os cookies estiverem ativos.</p></details>
       </section>
       {metrics ? <>
         <div className="gm-deposits"><span><ArrowDownLeft size={15}/>Depósitos confirmados</span><strong>{money(metrics.deposits)}</strong><small>Volume da rede atribuída ao jogo de cadastro</small></div>
         <div className="gm-stat-grid">{cards.map(({label,value,Icon})=><article key={label}><Icon size={16}/><strong>{value}</strong><span>{label}</span></article>)}</div>
-        <section className="gm-activity"><header><h3>Atividade da rede</h3><span>{metrics.rows.length} registros</span></header>{metrics.rows.length?<div className="gm-activity-list">{metrics.rows.slice(0,20).map(item=><article key={item.id}><i>{item.referredName?.charAt(0)||'A'}</i><div><strong>{item.referredName||'Indicação'}</strong><small>{item.isInfluencer?'Influenciador':'Jogador'}</small></div><b>{money(item.isInfluencer?item.subNetworkDeposits:item.totalDeposited)}</b></article>)}</div>:<p className="gm-empty">Ainda não há indicações para este jogo.</p>}</section>
+        <section className="gm-activity"><header><h3>Atividade da rede</h3><span>{metrics.rows.length} {metrics.rows.length===1?"registro":"registros"}</span></header>{metrics.rows.length?<div className="gm-activity-list">{metrics.rows.slice(0,20).map(item=><article key={item.id}><i>{item.referredName?.charAt(0)||'A'}</i><div><strong>{item.referredName||'Indicação'}</strong><small>{item.isInfluencer?'Influenciador':'Jogador'}</small></div><b>{money(item.isInfluencer?item.subNetworkDeposits:item.totalDeposited)}</b></article>)}</div>:<p className="gm-empty">Ainda não há indicações para este jogo.</p>}</section>
       </> : <p className="gm-empty">Os dados da sua rede ainda não estão disponíveis.</p>}
       <footer className="gm-footer"><button type="button" onClick={onShare}><Send size={15}/>Copiar link de indicação</button></footer>
     </div>

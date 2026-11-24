@@ -1,0 +1,27 @@
+.gm-click-rules summary{cursor:pointer;color:#43536a;font-size:12px;padding-block:8px}
+.gm-click-rules .gm-click-note{margin-top:2px}
+@media(min-width:901px){
+  .inex-dialog.gm-dialog{width:min(1000px,calc(100vw - 64px));max-width:1000px!important}
+  .gm-dialog .inex-dialog-heading{padding-block:16px}
+  .gm-dialog .inex-dialog-content{padding-block:18px 22px}
+  .gm-dialog .inex-game-metrics{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:14px;align-items:start;grid-template-areas:"identity identity" "clicks clicks" "activity activity" "footer footer"}
+  .gm-dialog .gm-has-metrics{grid-template-areas:"identity identity" "clicks deposits" "clicks stats" "activity activity" "footer footer"}
+  .gm-dialog .gm-identity{grid-area:identity;margin:0}
+  .gm-dialog .gm-identity p,.gm-dialog .gm-deposits small,.gm-dialog .gm-stat-grid span,.gm-dialog .gm-activity small,.gm-dialog .gm-activity header>span{font-size:12px;color:#526077}
+  .gm-dialog .gm-clicks{grid-area:clicks;align-self:stretch;margin:0}
+  .gm-dialog .gm-deposits{grid-area:deposits;padding:14px 16px;border-radius:14px;background:#f5f7fa}
+  .gm-dialog .gm-deposits>span{font-size:13px;color:#43536a}
+  .gm-dialog .gm-deposits strong{margin:4px 0;font-size:27px;color:#1d2d43}
+  .gm-dialog .gm-stat-grid{grid-area:stats;margin:0;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .gm-dialog .gm-stat-grid article{padding:9px 11px;border:1px solid #e4e9f0;border-radius:12px}
+  .gm-dialog .gm-stat-grid svg{float:right;margin:2px 0 0 6px;color:#536880}
+  .gm-dialog .gm-stat-grid strong{font-size:19px;color:#1d2d43}
+  .gm-dialog .gm-stat-grid span{margin:2px 0 0}
+  .gm-dialog .gm-activity,.gm-dialog .inex-game-metrics>.gm-empty{grid-area:activity}
+  .gm-dialog .gm-activity{padding:12px 16px;border:1px solid #e4e9f0;border-radius:14px}
+  .gm-dialog .gm-activity h3,.gm-dialog .gm-activity strong,.gm-dialog .gm-activity b{font-size:13px;color:#27374f}
+  .gm-dialog .gm-activity-list{max-height:min(160px,25dvh)}
+  .gm-dialog .gm-activity-list article{padding-block:7px}
+  .gm-dialog .gm-footer{grid-area:footer;display:flex;justify-content:flex-end;margin-top:0;padding-top:12px}
+  .gm-dialog .gm-footer button{width:auto;padding-inline:20px;border-radius:11px;font-size:13px}
+}
