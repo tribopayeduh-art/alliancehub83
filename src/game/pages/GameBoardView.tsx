@@ -755,7 +755,6 @@ export const GameBoardView: React.FC<GameBoardViewProps> = ({
 
   return (
     <div className="fixed inset-0 h-[100dvh] w-screen bg-[#070D22] text-white flex flex-col justify-between p-2 sm:p-3 select-none overflow-hidden touch-none overscroll-none font-sans bg-[linear-gradient(to_right,#15234A20_1px,transparent_1px),linear-gradient(to_bottom,#15234A20_1px,transparent_1px)] bg-[size:24px_24px] pb-[max(0.5rem,env(safe-area-inset-bottom))]">
-      <aside role="note" style={{position:"relative",zIndex:20,fontSize:10,lineHeight:1.5,padding:"6px 10px",background:"#182331",borderRadius:8}}>Modo financeiro: resultado sorteado no servidor. Pontos e multiplicadores visuais não autorizam créditos. Confira o valor confirmado ao encerrar.</aside>
       {/* Background Ambient Lighting Orbs */}
       <div className="absolute top-10 left-1/2 -translate-x-1/2 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 right-10 w-72 h-72 bg-purple-600/10 rounded-full blur-3xl pointer-events-none" />

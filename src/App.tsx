@@ -52,7 +52,7 @@ import logoImg from './components/logo.webp';
 import { GAME_ASSETS, publicAsset } from './config/gameAssets';
 
 const BlockPuzzleApp = lazy(() => import('./game/BlockPuzzleApp').then((module) => ({ default: module.BlockPuzzleApp })));
-const LazyScreen = () => <InexLoader fullScreen />;
+
 
 
 const gameTrackingId = (context: AppContext) => context === 'countmasters' ? 'g_count_masters' : context === 'gen-dino' ? 'g_gen_dino' : context === 'raspa-fortuna' ? 'g_raspa_fortuna' : context === 'subwaypay' ? 'g_subway_pay' : context === 'bubbleblast' ? 'g_bubble_blast' : context === 'blockwin' ? 'g_block_puzzle' : 'platform';
@@ -916,7 +916,7 @@ function AppContent({onGameModeChange}:{onGameModeChange:(value:boolean)=>void})
   // Render Independent Game Site if explicitly in game site mode
   if (appContext === 'blockwin') {
     return (
-      <Suspense fallback={<LazyScreen />}>
+      <Suspense fallback={<div aria-hidden="true" className="fixed inset-0 bg-[#08132c]" />}>
         <BlockPuzzleApp
           onReturnToPortal={() => {
             setAppContext('alliance-hub');

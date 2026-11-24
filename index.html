@@ -109,14 +109,15 @@
         const route=[query.get('site')||'',query.get('game')||'',location.pathname,location.hostname].join(' ').toLowerCase();
         const match=route.match(/count.?masters|block.?win|block.?puzzle|bubble|zumbla|subway|raspa|gen.?dino|gendino|dinopay|dinoplay|dinipay/);
         if(!match)return;
-        document.title='Carregando jogo';
+        document.documentElement.dataset.gameBoot='true';
         document.querySelectorAll('script[type="application/ld+json"],link[rel="manifest"],link[rel="icon"],link[rel="apple-touch-icon"]').forEach(el=>el.remove());
         document.querySelectorAll('meta[content]').forEach(el=>{if(/inex/i.test(el.content))el.content='Jogos';});
       })();
     </script>
   </head>
   <body>
-    <div id="root"><div style="position:fixed;inset:0;display:grid;place-items:center;background:white;color:#64748b;font:14px system-ui" role="status">Carregando…</div></div>
+    <style>html[data-game-boot="true"]{background:#08132c}html[data-game-boot="true"] #game-startup:not([data-error]){background:#08132c!important;color:transparent!important}</style>
+    <div id="root"><div id="game-startup" style="position:fixed;inset:0;display:grid;place-items:center;background:white;color:#64748b;font:14px system-ui" role="status">Carregando…</div></div>
     <script>
       (() => {
         const root = document.getElementById('root');
@@ -125,6 +126,7 @@
         const report = (slow) => {
           if (failed || !initial || !initial.isConnected) return;
           failed = true;
+          initial.dataset.error = "true";
           initial.replaceChildren();
           const box = document.createElement('div');
           box.style.cssText = 'max-width:480px;padding:28px;text-align:center;line-height:1.6';

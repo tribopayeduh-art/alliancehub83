@@ -13,5 +13,307 @@
       "path": "/api/cron/utmify",
       "schedule": "0 6 * * *"
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "blockwinner.site"
+        }
+      ],
+      "destination": "/game-entry/blockwin.html"
+    },
+    {
+      "source": "/login",
+      "has": [
+        {
+          "type": "host",
+          "value": "blockwinner.site"
+        }
+      ],
+      "destination": "/game-entry/blockwin.html"
+    },
+    {
+      "source": "/cadastro",
+      "has": [
+        {
+          "type": "host",
+          "value": "blockwinner.site"
+        }
+      ],
+      "destination": "/game-entry/blockwin.html"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.blockwinner.site"
+        }
+      ],
+      "destination": "/game-entry/blockwin.html"
+    },
+    {
+      "source": "/login",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.blockwinner.site"
+        }
+      ],
+      "destination": "/game-entry/blockwin.html"
+    },
+    {
+      "source": "/cadastro",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.blockwinner.site"
+        }
+      ],
+      "destination": "/game-entry/blockwin.html"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "dinopay.site"
+        }
+      ],
+      "destination": "/game-entry/gen-dino.html"
+    },
+    {
+      "source": "/login",
+      "has": [
+        {
+          "type": "host",
+          "value": "dinopay.site"
+        }
+      ],
+      "destination": "/game-entry/gen-dino.html"
+    },
+    {
+      "source": "/cadastro",
+      "has": [
+        {
+          "type": "host",
+          "value": "dinopay.site"
+        }
+      ],
+      "destination": "/game-entry/gen-dino.html"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.dinopay.site"
+        }
+      ],
+      "destination": "/game-entry/gen-dino.html"
+    },
+    {
+      "source": "/login",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.dinopay.site"
+        }
+      ],
+      "destination": "/game-entry/gen-dino.html"
+    },
+    {
+      "source": "/cadastro",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.dinopay.site"
+        }
+      ],
+      "destination": "/game-entry/gen-dino.html"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "raspadinhaadasorte.site"
+        }
+      ],
+      "destination": "/game-entry/raspafortuna.html"
+    },
+    {
+      "source": "/login",
+      "has": [
+        {
+          "type": "host",
+          "value": "raspadinhaadasorte.site"
+        }
+      ],
+      "destination": "/game-entry/raspafortuna.html"
+    },
+    {
+      "source": "/cadastro",
+      "has": [
+        {
+          "type": "host",
+          "value": "raspadinhaadasorte.site"
+        }
+      ],
+      "destination": "/game-entry/raspafortuna.html"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.raspadinhaadasorte.site"
+        }
+      ],
+      "destination": "/game-entry/raspafortuna.html"
+    },
+    {
+      "source": "/login",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.raspadinhaadasorte.site"
+        }
+      ],
+      "destination": "/game-entry/raspafortuna.html"
+    },
+    {
+      "source": "/cadastro",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.raspadinhaadasorte.site"
+        }
+      ],
+      "destination": "/game-entry/raspafortuna.html"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "joguesubway.surf"
+        }
+      ],
+      "destination": "/game-entry/subwaypay.html"
+    },
+    {
+      "source": "/login",
+      "has": [
+        {
+          "type": "host",
+          "value": "joguesubway.surf"
+        }
+      ],
+      "destination": "/game-entry/subwaypay.html"
+    },
+    {
+      "source": "/cadastro",
+      "has": [
+        {
+          "type": "host",
+          "value": "joguesubway.surf"
+        }
+      ],
+      "destination": "/game-entry/subwaypay.html"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.joguesubway.surf"
+        }
+      ],
+      "destination": "/game-entry/subwaypay.html"
+    },
+    {
+      "source": "/login",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.joguesubway.surf"
+        }
+      ],
+      "destination": "/game-entry/subwaypay.html"
+    },
+    {
+      "source": "/cadastro",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.joguesubway.surf"
+        }
+      ],
+      "destination": "/game-entry/subwaypay.html"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "jogarbubble.online"
+        }
+      ],
+      "destination": "/game-entry/bubbleblast.html"
+    },
+    {
+      "source": "/login",
+      "has": [
+        {
+          "type": "host",
+          "value": "jogarbubble.online"
+        }
+      ],
+      "destination": "/game-entry/bubbleblast.html"
+    },
+    {
+      "source": "/cadastro",
+      "has": [
+        {
+          "type": "host",
+          "value": "jogarbubble.online"
+        }
+      ],
+      "destination": "/game-entry/bubbleblast.html"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.jogarbubble.online"
+        }
+      ],
+      "destination": "/game-entry/bubbleblast.html"
+    },
+    {
+      "source": "/login",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.jogarbubble.online"
+        }
+      ],
+      "destination": "/game-entry/bubbleblast.html"
+    },
+    {
+      "source": "/cadastro",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.jogarbubble.online"
+        }
+      ],
+      "destination": "/game-entry/bubbleblast.html"
+    }
   ]
 }
