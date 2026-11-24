@@ -21,7 +21,7 @@ export function LegacyPlanOverview({onBack}:{onBack:()=>void}){
  const next=Math.floor(base*100*escale.commissionPercent/100)/100;
  return <main className="affiliate-plans legacy-plan">
    <div className="plan-top"><strong>iNEX / Meu plano</strong><button type="button" onClick={onBack}><ArrowLeft size={16}/> Mais</button></div>
-   <header className="legacy-intro"><span className="plan-kicker">AFILIADOS / PLANOS</span><h1>Meu plano</h1></header>
+   <header className="legacy-intro"><span className="plan-kicker">PLANOS DE AFILIADO</span><h1>Meu plano</h1></header>
    <article className="legacy-current-line">
      <span className="legacy-section-icon"><Check size={17}/></span>
      <div><h2>{alliance.name}</h2><p>Plano atual · acesso incluído</p></div>
@@ -29,7 +29,7 @@ export function LegacyPlanOverview({onBack}:{onBack:()=>void}){
    </article>
    <article className="legacy-hero">
      <div className="legacy-hero-copy">
-       <span className="legacy-hero-label">UPGRADE DISPONÍVEL PARA COMPARAÇÃO</span>
+       <span className="legacy-hero-label">PLANO ESCALE</span>
        <h2>{escale.name}</h2><p>Mais jogos e atendimento humano prioritário.</p>
      </div>
      <div className="legacy-gauge" aria-label="85% de comissão padrão">
@@ -37,7 +37,7 @@ export function LegacyPlanOverview({onBack}:{onBack:()=>void}){
        <strong>{escale.commissionPercent}%</strong>
      </div>
      <div className="legacy-hero-footer">
-       <button type="button" className="plan-upgrade" onClick={()=>setDetails(true)}>Explorar Escale <ArrowUpRight size={17}/></button>
+       <button type="button" className="plan-upgrade" onClick={()=>setDetails(true)}>Ver benefícios e preço <ArrowUpRight size={17}/></button>
        <span>+10 pontos percentuais na taxa padrão</span>
      </div>
    </article>
@@ -58,7 +58,7 @@ export function LegacyPlanOverview({onBack}:{onBack:()=>void}){
       <div className="legacy-modal-rate"><span>Comissão padrão</span><strong>75% <ArrowUpRight size={21} aria-hidden="true"/> <b>85%</b></strong></div>
       <ul>{features.slice(1).map(({icon:Icon,title})=><li key={title}><Icon size={17}/>{title}</li>)}</ul>
       <div className="legacy-modal-price"><span>Diferença entre os preços de tabela</span><strong>{brl.format(planDifference('escale','alliance')/100)}</strong></div>
-      <p role="status">Checkout ainda indisponível. Seu Alliance segue ativo.</p>
+      <p role="status">O pagamento do upgrade ainda não está disponível.</p>
       <button type="button" className="plan-upgrade" onClick={()=>setDetails(false)}>Voltar à comparação <ArrowLeft size={16}/></button>
     </div>
    </Modal>

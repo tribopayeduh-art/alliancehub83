@@ -484,7 +484,7 @@ export const AdminLivePlayersTab: React.FC<AdminLivePlayersTabProps> = ({
               <div>
                 <h3 className="font-bold text-base text-slate-900 flex items-center gap-2">
                   <Users className="w-4 h-4 text-[#596777]" />
-                  <span>Sessões Ativas em Execução</span>
+                  <span>Sessões ativas</span>
                   <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold text-xs border border-emerald-200">
                     {filteredSessions.length} jogadores
                   </span>
@@ -549,15 +549,15 @@ export const AdminLivePlayersTab: React.FC<AdminLivePlayersTabProps> = ({
                     : 'bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200/60'
                 }`}
               >
-                No Lobby / Online ({onlineSessionsCount})
+                No lobby ({onlineSessionsCount})
               </button>
             </div>
 
             {loading ? (
               <div className="py-16 text-center space-y-3">
                 <RefreshCw className="w-8 h-8 text-[#596777] animate-spin mx-auto" />
-                <p className="text-xs text-slate-400 font-medium">
-                  Sintonizando satélites de dados dos jogos...
+                <p role="status" className="text-sm text-slate-600">
+                  Carregando sessões dos jogos…
                 </p>
               </div>
             ) : filteredSessions.length === 0 ? (
@@ -841,7 +841,7 @@ export const AdminLivePlayersTab: React.FC<AdminLivePlayersTabProps> = ({
               <div className="flex items-center gap-2">
                 <Flame className="w-4 h-4 text-amber-500" />
                 <h3 className="font-bold text-sm text-slate-900">
-                  Feed de Resultados Recentes
+                  Resultados recentes
                 </h3>
               </div>
               <span className="text-[10px] text-slate-400 font-semibold uppercase">
@@ -888,7 +888,7 @@ export const AdminLivePlayersTab: React.FC<AdminLivePlayersTabProps> = ({
                 })
               ) : (
                 <div className="py-8 text-center text-xs text-slate-400">
-                  Aguardando encerramento das primeiras rodadas...
+                  Nenhuma rodada recente para exibir.
                 </div>
               )}
             </div>

@@ -1171,7 +1171,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     },
     live: {
       label: 'Jogadores em Tempo Real',
-      desc: 'Monitoramento ao vivo de partidas, apostas em andamento e radar do cassino'
+      desc: 'Sessões ativas, apostas em andamento e resultados recentes'
     },
     users: {
       label: 'Afiliados & Saldos',
@@ -1191,7 +1191,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     },
     reports: {
       label: 'Relatórios & DRE',
-      desc: 'Inteligência analítica, DRE contábil e extratos transacionais'
+      desc: 'Fluxo de caixa, DRE e extrato de transações'
     },
     notifications: {
       label: 'Notificações',

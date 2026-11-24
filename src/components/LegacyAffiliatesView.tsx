@@ -339,17 +339,11 @@ export const LegacyAffiliatesView: React.FC<AffiliatesViewProps> = ({
             <Users className="w-5 h-5 text-[#111111]" />
             Programa de Afiliados
           </h1>
-          <p className="text-xs text-[#737373]">Sua rede, seus resultados e seus próximos passos em um só lugar.</p>
+          <p className="text-xs text-[#737373]">Acompanhe indicações, depósitos e comissões.</p>
         </div>
-        <span className="affiliate-version-badge lg:hidden">v5</span>
         <button onClick={() => setAffiliateTheme(theme => theme === 'light' ? 'dark' : 'light')} className="affiliate-theme-button affiliate-theme-mobile lg:hidden" aria-label="Alternar tema claro ou escuro">{affiliateTheme === 'light' ? <Moon className="w-4 h-4"/> : <Sun className="w-4 h-4"/>}</button>
         <div className="hidden lg:flex ml-auto items-center gap-2">
           <button onClick={() => setAffiliateTheme(theme => theme === 'light' ? 'dark' : 'light')} className="affiliate-theme-button" title="Alternar tema">{affiliateTheme === 'light' ? <Moon className="w-4 h-4"/> : <Sun className="w-4 h-4"/>}<span>{affiliateTheme === 'light' ? 'Escuro' : 'Claro'}</span></button>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-[11px] font-extrabold text-emerald-700">
-            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-            Rede ativa
-          </span>
-          <span className="affiliate-version-badge">Hub v5</span>
           <span className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-bold text-slate-500">
             Código {activeInfo.referralCode}
           </span>

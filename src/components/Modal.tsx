@@ -73,7 +73,7 @@ export const Modal: React.FC<ModalProps> = ({isOpen,onClose,title,children,subti
   return createPortal(<div ref={backdrop} className="inex-modal-backdrop inex-viewport-modal">
     <div ref={panel} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby={heading} id={id} className={`inex-dialog ${className}`} style={maxWidth?{maxWidth}:undefined}>
       <div className="inex-sheet-handle" aria-hidden="true"/>
-      <header className="inex-dialog-heading"><div><span>iNEX</span><h3 id={heading}>{title}</h3>{subtitle&&<p className="inex-dialog-subtitle">{subtitle}</p>}</div><button type="button" onClick={onClose} aria-label="Fechar janela"><X size={18}/></button></header>
+      <header className="inex-dialog-heading"><div><h3 id={heading}>{title}</h3>{subtitle&&<p className="inex-dialog-subtitle">{subtitle}</p>}</div><button type="button" onClick={onClose} aria-label="Fechar janela"><X size={18}/></button></header>
       <div className="inex-dialog-content">{children}</div>
     </div>
   </div>,document.body);

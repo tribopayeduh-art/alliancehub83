@@ -42,3 +42,34 @@
 .partner-section-select{margin:14px 16px 0}
 
 @media(max-width:600px){.partner-clean .partner-section-select{width:calc(100% - 32px);max-width:calc(100% - 32px)}}
+
+/* Keep operations readable even when tables sit beside a live feed. */
+.admin-minimal .adm-live-table :is(th, td) {
+  padding-block: 12px;
+  vertical-align: middle;
+}
+.admin-minimal .adm-live-table :is(th, td):nth-child(n+3) {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+:is(.admin-minimal,.partner-minimal) .ws-report-table :is(th,td) {
+  color: #465467;
+}
+:is(.admin-minimal,.partner-minimal) :is(.ws-report-note,.ws-report-empty,.ws-chart-head p,.ws-report-metrics article>small) {
+  color: #566477;
+}
+:is(.admin-minimal,.partner-minimal) :is(.ws-report-card,.ws-report-table) {
+  min-inline-size: 0;
+}
+@media (min-width: 1024px) {
+  .admin-minimal .inex-admin-heading h1,
+  .partner-clean.partner-minimal .pc-header strong {
+    font-size: 24px;
+    line-height: 1.25;
+    font-weight: 650;
+  }
+  .admin-minimal .inex-admin-heading p {
+    font-size: 13px;
+    color: #566477;
+  }
+}

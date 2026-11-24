@@ -147,13 +147,13 @@ export const AdminReportsTab: React.FC<AdminReportsTabProps> = ({
       {['affiliates','players','transactions'].includes(subTab)&&<div className="ws-report-search"><input aria-label="Buscar no relatório" placeholder="Buscar por nome, e-mail ou identificação…" value={query} onChange={e=>{setQuery(e.target.value);setVisibleTransactions(50);}}/>{subTab==='transactions'&&<select aria-label="Filtrar status" value={transactionStatus} onChange={e=>{setTransactionStatus(e.target.value);setVisibleTransactions(50);}}><option value="all">Todos os status</option><option value="approved">Aprovados</option><option value="pending">Pendentes</option><option value="rejected">Rejeitados</option></select>}<span className="ws-report-note">{subTab==='affiliates'?affiliates.length:subTab==='players'?players.length:transactions.length} resultado(s) nos dados carregados</span></div>}
       {subTab==='transactions'&&transactions.length>visibleTransactions&&<div className="ws-reports"><button onClick={()=>setVisibleTransactions(n=>n+50)}>Carregar mais transações ({Math.min(visibleTransactions,transactions.length)} de {transactions.length})</button></div>}
       {loading ? (
-        <IOSCard className="p-5 text-center text-slate-400 text-xs font-semibold flex items-center justify-center gap-2">
+        <IOSCard className="p-5 text-center text-slate-600 text-sm flex items-center justify-center gap-2">
           <InexLoader compact />
-          <span>Calculando métricas avançadas de BI...</span>
+          <span role="status">Carregando dados do período…</span>
         </IOSCard>
       ) : !reportData ? (
         <IOSCard className="p-12 text-center text-slate-400 text-xs font-semibold">
-          Nenhum dado analítico disponível para este período.
+          Nenhum dado disponível para o período selecionado.
         </IOSCard>
       ) : (
         <>
