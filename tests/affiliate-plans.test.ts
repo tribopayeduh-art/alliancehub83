@@ -37,3 +37,12 @@ test('Pixup amount and identifier must match; confirmation updates entitlement o
  assert.equal(source.get('affiliates/aff-1').balance,12);
  assert.equal(source.has('charges/'+reference),false);
 });
+
+test('legacy Hub defaults to Alliance without changing negotiated or purchased rates',async()=>{
+ const {legacyAllianceRate}=await import('../shared/affiliatePlans.ts');
+ assert.equal(legacyAllianceRate({role:'affiliate'},70),75);
+ assert.equal(legacyAllianceRate({role:'affiliate'},82),82);
+ assert.equal(legacyAllianceRate({role:'affiliate',affiliatePlanRequired:true},70),70);
+ assert.equal(legacyAllianceRate({role:'affiliate',isInfluencer:true},70),70);
+ assert.equal(legacyAllianceRate({role:'user'},70),70);
+});

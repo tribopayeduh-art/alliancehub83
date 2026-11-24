@@ -1,7 +1,7 @@
 import {affiliateOfferDay,affiliateOfferId} from './affiliatePlanOffer.ts';
 import crypto from 'node:crypto';
 import type {Express} from 'express';
-import {affiliatePlans,findAffiliatePlan,planDifference,planGames,type AffiliatePlanId} from '../shared/affiliatePlans.ts';
+import {affiliatePlans,findAffiliatePlan,legacyAllianceRate,planDifference,planGames,type AffiliatePlanId} from '../shared/affiliatePlans.ts';
 import {supabaseStore} from './supabaseStore.ts';
 import {pixupConfigured,requestPixupCashin} from './pixupCashin.ts';
 import {pixupPostback} from './pixupWithdrawals.ts';
@@ -48,7 +48,8 @@ export function registerAffiliatePlanCheckout(app:Express){
    const order=account?.orderRef?(await collection(supabaseStore).doc(account.orderRef).get()).data() as Order:undefined;
    const offer=account?.planId==='starter'?(await supabaseStore.collection('affiliate_plan_offers').doc(affiliateOfferId(req.userId,affiliateOfferDay())).get()).data():null;
    const upgrade=offer?.count===6?{day:offer.day,differenceCents:offer.differenceCents,priceCents:planDifference('escale','starter')}:null;
-   return res.json({upgrade,required:!!req.user?.affiliatePlanRequired&&!account?.planId,planId:account?.planId??null,games:account?.games??[],plans:affiliatePlans,catalog:planGames,order:order?.status==='pending'?order:null});
+   const legacy=!req.user?.affiliatePlanRequired;
+   return res.json({upgrade,legacy,defaultCommission:legacy?legacyAllianceRate(req.user)??75:null,required:!!req.user?.affiliatePlanRequired&&!account?.planId,planId:account?.planId??(legacy?'alliance':null),games:account?.games??[],plans:affiliatePlans,catalog:planGames,order:order?.status==='pending'?order:null});
   }catch{return res.status(503).json({error:'Não foi possível consultar seu plano.'});}
  });
  app.post('/api/affiliate-plans/checkout',async(req:any,res)=>{

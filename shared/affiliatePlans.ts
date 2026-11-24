@@ -37,3 +37,11 @@ export function affiliateGameKey(value:unknown) {
   const key=String(value??'').toLowerCase().replace(/_/g,'-').replace(/^g-/,'');
   return ({'block-puzzle':'blockwin','block':'blockwin','block-win':'blockwin','bubble-blast':'bubbleblast','bubbles-win':'bubbleblast','subway-pay':'subwaypay','raspafortuna':'raspa-fortuna','gendino':'gen-dino'} as Record<string,string>)[key] ?? key;
 }
+
+// Legacy Hub accounts retain access without a checkout. Keep custom negotiated rates.
+export function legacyAllianceRate(user:{affiliatePlanRequired?:boolean;role?:string;isAffiliate?:boolean;isInfluencer?:boolean;registeredGame?:string}, current?:number) {
+  const hub=user.role==='affiliate'||user.isAffiliate===true||user.registeredGame==='alliance_hub';
+  return !user.affiliatePlanRequired&&hub&&!user.isInfluencer&&(current==null||current===70)
+    ? findAffiliatePlan('alliance')!.commissionPercent
+    : current;
+}

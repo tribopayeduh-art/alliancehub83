@@ -1,5 +1,5 @@
 import {advanceAffiliateOffer,affiliateOfferDay,affiliateOfferId} from './affiliatePlanOffer.ts';
-import {findAffiliatePlan} from '../shared/affiliatePlans.ts';
+import {findAffiliatePlan,legacyAllianceRate} from '../shared/affiliatePlans.ts';
 import crypto from 'node:crypto';
 import {supabaseStore} from './supabaseStore.ts';
 import {getPartnerCutFromAffiliateRevShare} from './partnerCommission.ts';
@@ -25,12 +25,12 @@ export async function prepareDepositLedger(tx:any,user:any,id:string,amount:numb
   const entitlement=owner.affiliatePlanRequired?await read('affiliate_plan_accounts',owner.id):null;
   const tier=findAffiliatePlan(entitlement?.planId);
   if(tier?.id==='starter')starterOwner=owner.id;
-  const gross=rate(tier?.commissionPercent??hub.revSharePercent,70),ir=inf&&inf.id!==hub.userId?rate(inf.influencerRate):0;
+  const gross=rate(tier?.commissionPercent??legacyAllianceRate(owner,hub.revSharePercent),70),ir=inf&&inf.id!==hub.userId?rate(inf.influencerRate):0;
   if(ir>gross)issue='INFLUENCER_RATE_EXCEEDS_HUB_RATE';
   rates.push({affiliate:hub,rate:Math.max(0,gross-ir),kind:'hub'});
   if(inf&&ir>0){const ia=await affiliate(user.influencerAffiliateId,inf.id);if(!ia)issue='INFLUENCER_WALLET_MISSING';else rates.push({affiliate:ia,rate:ir,kind:'influencer'});}
   const master=owner.affiliateId&&owner.affiliateId!==hub.id?await affiliate(owner.affiliateId,owner.affiliateId):null;
-  if(master&&master.userId!==hub.userId&&master.userId!==user.id)rates.push({affiliate:master,rate:rate(master.revSharePercent),kind:'master'});
+  if(master&&master.userId!==hub.userId&&master.userId!==user.id)rates.push({affiliate:master,rate:rate(legacyAllianceRate(await read('users',master.userId)??{},master.revSharePercent)),kind:'master'});
   const pid=owner.partnerUserId||owner.partnerId;if(pid&&pid!==hub.userId){const partner=await read('users',pid);if(partner&&(partner.isPartner||partner.partnerApproved)){const pa=await affiliate(undefined,pid);if(!pa)issue='PARTNER_WALLET_MISSING';else rates.push({affiliate:pa,rate:getPartnerCutFromAffiliateRevShare(gross),kind:'partner'});}}
  }
  const totalRate=rates.reduce((a,r)=>a+r.rate,0);if(totalRate>100.000001)issue='TOTAL_COMMISSION_EXCEEDS_DEPOSIT';
