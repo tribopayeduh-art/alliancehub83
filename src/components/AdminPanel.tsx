@@ -1460,6 +1460,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       {/* 4. All Connected Modals */}
       <AdminBalanceModal
         user={selectedUserForBalance}
+        planToken={canRead('canManageUsers')&&canRead('canManageBalances')?token:undefined}
+        onPlanSaved={()=>void fetchUsers()}
         initialWallet={initialBalanceWallet}
         isOpen={!!selectedUserForBalance}
         onClose={() => {
