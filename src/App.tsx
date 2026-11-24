@@ -1,3 +1,4 @@
+import {LegacyPlanOverview} from './components/LegacyPlanOverview';
 import { Modal } from './components/Modal';
 import { AffiliatePlans, type PlanAccount } from './components/AffiliatePlans';
 import { UtmifyIntegration } from './components/UtmifyIntegration';
@@ -977,10 +978,7 @@ function AppContent({onGameModeChange}:{onGameModeChange:(value:boolean)=>void})
   }
 
   if(!planRequired&&activeTab==='more'&&subView==='plans'){
-    return <main className="affiliate-plans">
-      <div className="plan-top"><strong>iNEX / Afiliados</strong><button type="button" onClick={()=>setSubView('main')}>← Voltar para Mais</button></div>
-      <header><span className="plan-kicker">ACESSO MANTIDO</span><h1>Plano Alliance</h1><p>Seu acesso ao Alliance já está incluído, sem novo pagamento. A comissão padrão do plano é de 75%.</p></header>
-    </main>;
+    return <LegacyPlanOverview onBack={()=>setSubView('main')}/>;
   }
 
   if(planRequired&&token&&(!planAccount||planAccount.required||activeTab==='more'&&subView==='plans')){

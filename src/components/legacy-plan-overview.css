@@ -1,0 +1,22 @@
+.legacy-plan{padding-top:max(18px,env(safe-area-inset-top));padding-bottom:calc(32px + env(safe-area-inset-bottom))}
+.legacy-plan h2,.legacy-upgrade-detail h3{font-size:19px;font-weight:700;line-height:1.2}
+.legacy-tier-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
+.legacy-tier{padding:20px;border:1px solid #dce6e4;border-radius:18px;background:#fff;display:grid;justify-items:start;align-content:start;gap:9px;animation:plan-in .3s ease both}
+.legacy-tier strong{font-size:clamp(29px,6vw,41px);line-height:1.1;font-variant-numeric:tabular-nums}
+.legacy-tier strong small{font-size:12px;font-weight:600}
+.legacy-tag{display:inline-flex;align-items:center;gap:5px;background:#eef6f2;color:#306553;padding:4px 8px;border-radius:99px;font-weight:680;font-size:12px}
+.legacy-premium{background:#e9f3ed;border-color:#aac7b7;animation-delay:.07s}
+.legacy-premium button,.legacy-plan .plan-top button,.legacy-upgrade-detail button{min-height:44px}
+.legacy-simulator,.legacy-perks{margin-top:16px;padding:17px;border-radius:16px;border:1px solid #dce6e4;background:#fff;animation:plan-in .35s ease both}
+.legacy-simulator{display:grid;grid-template-columns:auto 1fr;align-items:start;gap:12px}
+.legacy-section-icon{display:grid;place-items:center;background:#eff5f1;color:#326653;border-radius:10px;width:38px;height:38px;flex:none}
+.legacy-simulator :is(label,input,dl,.legacy-note){grid-column:1/-1}
+.legacy-simulator label{display:flex;flex-wrap:wrap;justify-content:space-between;gap:5px;font-size:14px}
+.legacy-simulator input{width:100%;accent-color:#326653;min-height:30px}
+.legacy-simulator dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:0}
+.legacy-simulator dl div{background:#f4f7f6;border-radius:9px;padding:8px 10px}
+.legacy-simulator dt{font-size:12px}.legacy-simulator dd{margin:2px 0 0;font-weight:700;font-variant-numeric:tabular-nums}
+.legacy-simulator .legacy-delta{grid-column:1/-1;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:6px;background:#e8f3ec;color:#255741}
+.legacy-note{font-size:12px}.legacy-perks>div{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:13px;margin-top:13px}
+.legacy-perks article{display:flex;gap:9px;align-items:start}.legacy-perks h3{font-weight:670}.legacy-perks p{font-size:13px}
+.legacy-upgrade-detail{display:grid;gap:12px;justify-items:start}.legacy-upgrade-detail [role=status]{padding:10px;background:#f2f5f7;border-radius:9px}
