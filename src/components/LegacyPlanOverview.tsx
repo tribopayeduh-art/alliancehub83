@@ -2,6 +2,7 @@ import {useId,useState} from 'react';
 import {ArrowLeft,ArrowUpRight,Check,Gamepad2,Headphones,TrendingUp} from 'lucide-react';
 import {findAffiliatePlan,planDifference} from '../../shared/affiliatePlans';
 import {Modal} from './Modal';
+import logo from './inex-logo.svg';
 import './affiliate-plans.css';
 import './legacy-plan-overview.css';
 
@@ -20,7 +21,7 @@ export function LegacyPlanOverview({onBack}:{onBack:()=>void}){
  const current=Math.floor(base*100*alliance.commissionPercent/100)/100;
  const next=Math.floor(base*100*escale.commissionPercent/100)/100;
  return <main className="affiliate-plans legacy-plan">
-   <div className="plan-top"><strong>iNEX / Meu plano</strong><button type="button" onClick={onBack}><ArrowLeft size={16}/> Mais</button></div>
+   <div className="plan-top"><div className="legacy-plan-brand"><img src={logo} alt="iNEX" width={76} height={30}/><span>Área de afiliados</span></div><button type="button" onClick={onBack}><ArrowLeft size={16}/> Voltar para Mais</button></div>
    <header className="legacy-intro"><span className="plan-kicker">PLANOS DE AFILIADO</span><h1>Meu plano</h1></header>
    <article className="legacy-current-line">
      <span className="legacy-section-icon"><Check size={17}/></span>

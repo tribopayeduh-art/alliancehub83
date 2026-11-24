@@ -83,6 +83,13 @@
 .legacy-hero-footer span{color:#c7d2e7;font-size:11px}.legacy-delta dd span{display:inline-block;animation:plan-in .2s ease both}
 @keyframes legacy-gauge-in{from{stroke-dasharray:0 100}to{stroke-dasharray:85 100}}
 
+.legacy-plan .plan-top { padding-block-end: 14px; border-bottom: 1px solid #dde3ed; }
+.legacy-plan-brand { display: flex; align-items: center; gap: 14px; }
+.legacy-plan-brand img { display: block; object-fit: contain; width: 76px; height: 30px; }
+.legacy-plan-brand span { border-inline-start: 1px solid #dde3ed; padding-inline-start: 14px; color: #4c5869; font-size: 13px; font-weight: 600; }
+.legacy-plan .plan-top button { white-space: nowrap; font-size: 13px; }
+@media (max-width: 479px) { .legacy-plan-brand span { display: none; } }
+
 @media (min-width: 1024px) {
   .affiliate-plans.legacy-plan {
     display: grid;
@@ -94,7 +101,7 @@
       "escale simulator"
       "benefits benefits";
     align-content: start;
-    grid-template-rows: auto auto auto 1fr auto;
+    grid-template-rows: auto auto auto minmax(230px, auto) auto;
     gap: 18px 24px;
     max-width: none;
     padding: 24px max(32px, calc((100% - 1400px) / 2)) 48px;
