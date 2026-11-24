@@ -1,0 +1,19 @@
+.inex-withdraw-entry,.inex-withdraw-review{display:contents}
+.inex-withdraw-review-title{display:none}
+.inex-withdraw-form .inex-withdraw-review>button[type=submit]{background:#242527;min-height:48px}
+@media(min-width:900px){
+  .inex-dialog.inex-dialog-withdraw-desktop{width:min(900px,calc(100vw - 64px));max-width:900px!important}
+  .inex-dialog-withdraw-desktop .inex-dialog-heading{padding-block:19px}
+  .inex-dialog-withdraw-desktop .inex-dialog-content{padding-block:20px 24px}
+  .inex-withdraw-columns{display:grid!important;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);align-items:start;gap:24px!important}
+  .inex-withdraw-columns>.inex-withdraw-entry,.inex-withdraw-columns>.inex-withdraw-review{display:grid;gap:13px;min-width:0;margin:0!important}
+  .inex-withdraw-review{padding:16px;border:1px solid #e6e9ee;border-radius:16px;background:#fcfcfd}
+  .inex-withdraw-review-title{display:block;font-size:15px;font-weight:650}
+  .inex-withdraw-review .inex-withdraw-summary{padding:14px;gap:10px;font-size:13px}
+  .inex-withdraw-review .inex-withdraw-policy summary{min-height:36px;font-size:12px;color:#4c5666}
+  .inex-withdraw-entry .inex-withdraw-balance{padding:12px 14px}
+}
+@media(max-width:899px){
+  .inex-withdraw-columns:not(.inex-withdraw-form){display:flex;flex-direction:column;gap:16px}
+  .inex-withdraw-columns>.inex-withdraw-entry,.inex-withdraw-columns>.inex-withdraw-review{margin:0!important}
+}

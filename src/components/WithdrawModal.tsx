@@ -1,3 +1,4 @@
+import './withdraw-desktop.css';
 import { readApiJson } from '../lib/readApiJson';
 import {InexLoader} from './InexLoader';
 import React, { useState, useEffect } from 'react';
@@ -242,8 +243,9 @@ export const WithdrawModal: React.FC<WithdrawModalProps> = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Solicitar Saque via PIX">
-      <form onSubmit={handleSubmit} className="inex-withdraw-form space-y-4 pt-1">
+    <Modal isOpen={isOpen} onClose={onClose} title="Solicitar Saque via PIX" className="inex-dialog-withdraw-desktop">
+      <form onSubmit={handleSubmit} className="inex-withdraw-form inex-withdraw-columns space-y-4 pt-1">
+          <div className="inex-withdraw-entry">
         {/* Error Alert if any */}
         {error && (
           <div className="p-3 bg-red-50 border border-red-200 text-red-600 rounded-xl text-xs font-medium flex items-center gap-2">
@@ -481,7 +483,10 @@ export const WithdrawModal: React.FC<WithdrawModalProps> = ({
           )}
         </div>
 
-        {/* Resumo de Saque & Taxa de R$ 8,00 */}
+        </div>
+          <section className="inex-withdraw-review" aria-label="Resumo do saque">
+          <h3 className="inex-withdraw-review-title">Resumo do saque</h3>
+          {/* Resumo de Saque & Taxa de R$ 8,00 */}
         <div className="inex-withdraw-summary">
           <div className="flex items-center justify-between text-slate-500">
             <span>Valor solicitado</span>
@@ -524,7 +529,8 @@ export const WithdrawModal: React.FC<WithdrawModalProps> = ({
             </>
           )}
         </button>
-      </form>
+      </section>
+        </form>
     </Modal>
   );
 };

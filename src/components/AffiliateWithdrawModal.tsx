@@ -1,3 +1,4 @@
+import './withdraw-desktop.css';
 import {MIN_COMMISSION_WITHDRAW} from '../../shared/withdrawalRules';
 import { readApiJson } from '../lib/readApiJson';
 import {InexLoader} from './InexLoader';
@@ -265,7 +266,7 @@ export const AffiliateWithdrawModal: React.FC<AffiliateWithdrawModalProps> = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Saque de Comissões de Afiliado">
+    <Modal isOpen={isOpen} onClose={onClose} title="Saque de Comissões de Afiliado" className={successReceipt ? undefined : "inex-dialog-withdraw-desktop"}>
       {successReceipt ? (
         <div className="space-y-4 pt-1 animate-in fade-in zoom-in-95 duration-200">
           <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-5 text-center space-y-3">
@@ -337,7 +338,8 @@ export const AffiliateWithdrawModal: React.FC<AffiliateWithdrawModalProps> = ({
           </button>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-4 pt-1">
+        <form onSubmit={handleSubmit} className="inex-withdraw-columns space-y-4 pt-1">
+          <div className="inex-withdraw-entry">
           {/* Balance Card Warning - Affiliate Balance */}
           <div className="bg-emerald-50 border border-emerald-200/80 rounded-2xl p-3.5 space-y-1">
             <div className="flex items-center justify-between">
@@ -586,6 +588,9 @@ export const AffiliateWithdrawModal: React.FC<AffiliateWithdrawModalProps> = ({
             />
           </div>
 
+          </div>
+          <section className="inex-withdraw-review" aria-label="Resumo do saque">
+          <h3 className="inex-withdraw-review-title">Resumo do saque</h3>
           {/* Resumo de Saque de Comissões & Taxa */}
           <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5 text-xs">
             <div className="flex items-center justify-between text-slate-500">
@@ -679,6 +684,7 @@ export const AffiliateWithdrawModal: React.FC<AffiliateWithdrawModalProps> = ({
                 : 'Programa Oficial de Afiliados'}
             </span>
           </div>
+        </section>
         </form>
       )}
     </Modal>
