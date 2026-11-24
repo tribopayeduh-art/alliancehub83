@@ -37,12 +37,13 @@ export default function AllianceLanding() {
     </header>
     <main>
       <section className="ah-hero ah-wrap">
-        <div><p className="ah-kicker">ALLIANCE HUB · PORTAL DE AFILIADOS</p>
-          <h1>Sua rede de afiliados.<br/>Tudo sob controle.</h1>
+        <div className="ah-hero-copy"><p className="ah-kicker">ALLIANCE HUB · PORTAL DE AFILIADOS</p>
+          <h1>Sua rede de afiliados.<br/><span>Tudo sob controle.</span></h1>
           <p className="ah-lead">Acompanhe indicações, resultados e comissões no painel iNEX, do primeiro link até a gestão da sua carteira.</p>
           <div className="ah-actions"><a className="ah-button" href={'/cadastro'+query}>Criar minha conta <ArrowRight size={18}/></a><a className="ah-button ah-outline" href="/painel">Acessar painel</a></div>
         </div>
         <div className="ah-product">
+          <div className="ah-orbit" aria-hidden="true"><i/><i/><i/></div>
           <aside className="ah-preview" aria-label="Mockup do painel com dados ilustrativos">
             <div className="ah-preview-title"><LayoutDashboard size={21}/><div><strong>Explore o painel</strong><small>Dados ilustrativos</small></div><span className="ah-preview-dot" aria-hidden="true"/></div>
             <div className="ah-demo-nav" role="group" aria-label="Áreas da demonstração">{views.map(({name},i)=><button type="button" key={name} aria-pressed={i===viewIndex} onClick={()=>setViewIndex(i)}>{name}</button>)}</div>
@@ -69,7 +70,7 @@ export default function AllianceLanding() {
             <input id={inputId} type="range" min={100} max={10000} step={100} value={base} aria-valuetext={brl.format(base)} onChange={e=>setBase(Number(e.currentTarget.value))}/>
             <div className="ah-presets">{[1000,3000,5000].map(amount=><button type="button" aria-pressed={amount===base} key={amount} onClick={()=>setBase(amount)}>{brl.format(amount)}</button>)}</div>
           </div>
-          <dl>{affiliatePlans.map(plan=><div key={plan.id}><dt>{plan.name} <small>{plan.commissionPercent}%</small></dt><dd>{brl.format(base*plan.commissionPercent/100)}</dd></div>)}</dl>
+          <dl>{affiliatePlans.map(plan=><div key={plan.id}><dt>{plan.name} <small>{plan.commissionPercent}%</small></dt><dd>{brl.format(base*plan.commissionPercent/100)}</dd><span className="ah-commission-track" aria-hidden="true"><i style={{width:(base/10000*plan.commissionPercent)+'%'}}/></span></div>)}</dl>
         </div>
       </section>
       <section className="ah-wrap ah-section"><h2>Perguntas frequentes</h2><div className="ah-faq">

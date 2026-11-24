@@ -56,3 +56,27 @@
 .ah-calculator dl{display:grid;align-content:center;gap:8px;margin:0}.ah-calculator dl>div{background:#fff;border:1px solid var(--line);padding:11px 13px;border-radius:9px}.ah-calculator dt{font-weight:650}.ah-calculator dt small{color:var(--muted);margin-left:5px}.ah-calculator dd{margin:0;font-weight:750;font-variant-numeric:tabular-nums}
 @media(max-width:720px){.ah-calculator{grid-template-columns:1fr;gap:14px}}
 @media(prefers-reduced-motion:reduce){.ah-demo-body,.ah-product .ah-notice,.ah-bars i{animation:none}.ah-demo-nav button,.ah-presets button,.ah-grid article{transition:none}}
+
+/* Motion follows the content: introduction, panel, then its activity cue. */
+.ah-hero-copy> *{animation:ah-enter .65s cubic-bezier(.2,.75,.25,1) both}
+.ah-hero-copy h1{animation-delay:.07s}
+.ah-hero-copy h1 span{color:#315b94}
+.ah-hero-copy .ah-lead{animation-delay:.14s}
+.ah-hero-copy .ah-actions{animation-delay:.21s}
+.ah-product{isolation:isolate;animation:ah-enter .8s .12s cubic-bezier(.2,.75,.25,1) both}
+.ah-orbit{position:absolute;inset:-20px -12px 8px;z-index:-1;pointer-events:none;overflow:hidden;border-radius:32px}
+.ah-orbit i{position:absolute;inset:9% 4%;border:1px solid #658dca66;border-radius:50%;transform:rotate(-23deg)}
+.ah-orbit i:nth-child(2){inset:3% 9%;transform:rotate(23deg)}
+.ah-orbit i:last-child{inset:5% 15%;transform:rotate(-38deg);border-style:dashed}
+.ah-demo-body{animation:ah-enter .34s cubic-bezier(.2,.75,.25,1) both}
+.ah-product .ah-notice{animation:ah-toast .48s .24s cubic-bezier(.2,.85,.3,1.1) both}
+.ah-product .ah-notice>span{animation:ah-ping .65s .6s ease-out both}
+.ah-commission-track{flex-basis:100%;display:block;height:4px;border-radius:4px;background:#e5edf7;overflow:hidden}
+.ah-commission-track i{display:block;height:100%;border-radius:inherit;background:#547cb0;transition:width .22s ease-out}
+.ah-actions .ah-button svg,.ah-cta .ah-button svg{transition:transform .2s}
+@media(hover:hover){.ah-actions .ah-button:hover svg,.ah-cta .ah-button:hover svg{transform:translateX(4px)}}
+@keyframes ah-enter{from{opacity:0;transform:translateY(13px)}to{opacity:1;transform:none}}
+@keyframes ah-toast{from{opacity:0;transform:translateY(10px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes ah-ping{from{box-shadow:0 0 0 0 #537fbd66}to{box-shadow:0 0 0 9px #537fbd00}}
+@media(max-width:720px){.ah-orbit{inset:-8px -8px 12px}.ah-hero-copy>*{animation-duration:.4s}}
+@media(prefers-reduced-motion:reduce){.ah-hero-copy>*,.ah-product,.ah-demo-body,.ah-product .ah-notice,.ah-product .ah-notice>span{animation:none}.ah-commission-track i,.ah-actions .ah-button svg,.ah-cta .ah-button svg{transition:none}}
