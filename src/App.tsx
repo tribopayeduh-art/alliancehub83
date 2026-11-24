@@ -1,3 +1,4 @@
+import { AffiliatePlans, type PlanAccount } from './components/AffiliatePlans';
 import { UtmifyIntegration } from './components/UtmifyIntegration';
 import {SupportCenter,SupportTour} from './components/SupportCenter';
 import {requestJson,deadlineFetch as fetch} from './lib/requestJson';
@@ -228,7 +229,7 @@ function AppContent({onGameModeChange}:{onGameModeChange:(value:boolean)=>void})
 
   // Main App State
   const [activeTab, setActiveTab] = useState<TabType>('home');
-  const [subView, setSubView] = useState<'main' | 'affiliates' | 'members' | 'campaigns' | 'partner' | 'utmify'>('main');
+  const [subView, setSubView] = useState<'main' | 'affiliates' | 'members' | 'campaigns' | 'partner' | 'utmify' | 'plans'>('main');
   const [gamesResetKey, setGamesResetKey] = useState<number>(0);
 
   // Data State
@@ -444,6 +445,19 @@ function AppContent({onGameModeChange}:{onGameModeChange:(value:boolean)=>void})
       applyGameSEO(isPartnerRoute ? 'partner' : 'alliance-hub');
     }
   }, [activeTab, subView, appContext]);
+
+  const [planAccount,setPlanAccount] = useState<PlanAccount|null>(null);
+  const [planError,setPlanError] = useState('');
+  const planRequired=!!user?.affiliatePlanRequired;
+  const reloadPlan = React.useCallback(async () => {
+    if(!token||!planRequired)return;
+    const result=await requestJson('/api/affiliate-plans',{headers:{Authorization:`Bearer ${token}`}});
+    setPlanAccount(result);setPlanError('');
+  },[token,planRequired]);
+  useEffect(()=>{
+    setPlanAccount(null);setPlanError('');
+    if(planRequired)void reloadPlan().catch(e=>setPlanError(e.message));
+  },[reloadPlan,planRequired]);
 
   // 2. Fetch User Data on mount or token change
   useEffect(() => {
@@ -948,6 +962,11 @@ function AppContent({onGameModeChange}:{onGameModeChange:(value:boolean)=>void})
     );
   }
 
+  if(planRequired&&token&&(!planAccount||planAccount.required||activeTab==='more'&&subView==='plans')){
+    if(!planAccount)return <main className="affiliate-plans"><h1>{planError?'Não foi possível consultar seu plano':'Consultando seu plano…'}</h1>{planError&&<><p role="alert">{planError}</p><button type="button" onClick={()=>void reloadPlan().catch(e=>setPlanError(e.message))}>Tentar novamente</button></>}<button type="button" onClick={()=>void handleLogout()}>Sair</button></main>;
+    return <AffiliatePlans token={token} account={planAccount} reload={reloadPlan} onExit={()=>void handleLogout()} onBack={planAccount.required?undefined:()=>setSubView('main')}/>;
+  }
+
   // Render Authenticated Mobile Container
   return (
     <div className="min-h-screen bg-[#f8f9fa] flex items-center justify-center p-0 sm:px-1.5 lg:px-2 sm:py-1 lg:py-1.5">
@@ -995,6 +1014,8 @@ function AppContent({onGameModeChange}:{onGameModeChange:(value:boolean)=>void})
 
           {appContext!=='countmasters' && activeTab === 'games' && (
             <GamesView
+              planAccess={planAccount?.planId ? {planId:planAccount.planId,games:planAccount.games} : undefined}
+              onUpgradePlan={()=>{setActiveTab('more');setSubView('plans');}}
               key={gamesResetKey}
               authToken={token}
               onPlayingChange={setPlayingGame}
@@ -1069,6 +1090,7 @@ function AppContent({onGameModeChange}:{onGameModeChange:(value:boolean)=>void})
                 <MoreView
                   onOpenSupport={()=>setSupportOpen(true)}
                   onOpenUtmify={() => setSubView('utmify')}
+                  onOpenPlans={planRequired ? () => setSubView('plans') : undefined}
                   user={user}
                   onOpenProfile={() => setProfileOpen(true)}
                   onOpenAffiliates={() => {

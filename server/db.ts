@@ -132,6 +132,7 @@ export interface DotfyGatewayConfigDB {
 }
 
 export interface UserDB {
+  affiliatePlanRequired?: boolean;
   id: string;
   name: string;
   email: string;

@@ -23,6 +23,7 @@ export const adminGuide = [
 export const supportTopics = ['saque','deposito','pis','indicacoes','configuracoes','outro'] as const;
 export type SupportTopic = typeof supportTopics[number];
 export type SupportTicket = {
+ priority?:boolean;
  id:string; userId:string; topic:SupportTopic; question:string; diagnosis:string; suggestion:string;
  transactionId?:string; status:'open'|'approved'|'rejected'; createdAt:string; decidedAt?:string; decidedBy?:string; reply?:string;
 };

@@ -1,3 +1,4 @@
+import {findAffiliatePlan} from '../shared/affiliatePlans.ts';
 import crypto from 'node:crypto';
 import {supabaseStore} from './supabaseStore.ts';
 import {getPartnerCutFromAffiliateRevShare} from './partnerCommission.ts';
@@ -19,7 +20,9 @@ export async function prepareDepositLedger(tx:any,user:any,id:string,amount:numb
  const rate=(n:any,fallback=0)=>{const v=Number(n??fallback);if(!Number.isFinite(v)||v<0||v>100){issue='INVALID_COMMISSION_RATE';return 0;}return v;};
  if(hub&&owner){
   if(owner.id===user.id||String(owner.email||'').toLowerCase()===String(user.email||'').toLowerCase()){issue='SELF_REFERRAL_REVIEW';}
-  const gross=rate(hub.revSharePercent,70),ir=inf&&inf.id!==hub.userId?rate(inf.influencerRate):0;
+  const entitlement=owner.affiliatePlanRequired?await read('affiliate_plan_accounts',owner.id):null;
+  const tier=findAffiliatePlan(entitlement?.planId);
+  const gross=rate(tier?.commissionPercent??hub.revSharePercent,70),ir=inf&&inf.id!==hub.userId?rate(inf.influencerRate):0;
   if(ir>gross)issue='INFLUENCER_RATE_EXCEEDS_HUB_RATE';
   rates.push({affiliate:hub,rate:Math.max(0,gross-ir),kind:'hub'});
   if(inf&&ir>0){const ia=await affiliate(user.influencerAffiliateId,inf.id);if(!ia)issue='INFLUENCER_WALLET_MISSING';else rates.push({affiliate:ia,rate:ir,kind:'influencer'});}

@@ -59,6 +59,7 @@ export interface PlayerWithdrawalRequest {
 }
 
 export interface User {
+  affiliatePlanRequired?:boolean;
   financialReviewHold?:boolean;
   financialDebt?:number;
   registeredGame?: string;

@@ -31,7 +31,7 @@ export function AdminSupport({token,onTutorial,onReview}:{token:string;onTutoria
   {loading&&!items.length&&<p role="status">Buscando tickets…</p>}
   {!loading&&!items.length&&!error&&<p>Nenhum ticket nesta situação.</p>}
   {items.map(t=><article key={t.id}>
-    <header><h3>{topicLabels[t.topic]} · #{t.id.slice(0,8)}</h3><small>{new Date(t.createdAt).toLocaleString('pt-BR')} · {ticketLabels[t.status]}</small></header>
+    <header><h3>{topicLabels[t.topic]} · #{t.id.slice(0,8)}</h3><small>{new Date(t.createdAt).toLocaleString('pt-BR')} · {ticketLabels[t.status]}{t.priority ? ' · Prioridade Escale' : ''}</small></header>
     <p><strong>Conta:</strong> {t.userId}{t.transactionId&&<><br/><strong>Movimentação:</strong> {t.transactionId}</>}</p>
     <p><strong>Relato:</strong> {t.question}</p>
     <p><strong>Diagnóstico:</strong> {t.diagnosis}</p>

@@ -7,10 +7,10 @@ export function pixupDepositCents(value: unknown): number | null {
   return cents >= 100 && Number.isSafeInteger(cents) ? cents : null;
 }
 
-export function parsePixupDepositEvent(payload: any, header: string) {
+export function parsePixupDepositEvent(payload: any, header: string, referencePattern = PIXUP_DEPOSIT_REFERENCE) {
   const d = payload?.data;
   if (header !== 'cashin.confirmed' || payload?.event !== header || d?.type !== 'cashin' || d?.currency !== 'BRL' || d?.status !== 'confirmed') return null;
-  if (typeof d.external_id !== 'string' || !PIXUP_DEPOSIT_REFERENCE.test(d.external_id)) return null;
+  if (typeof d.external_id !== 'string' || !referencePattern.test(d.external_id)) return null;
   const cents = pixupDepositCents(d.amount);
   if (!cents || typeof d.transaction_id !== 'string' || !/^[a-z0-9_-]{1,100}$/i.test(d.transaction_id) || d.transaction_id !== payload.transaction_id) throw new Error('Confirmação Pixup inválida.');
   return {reference:d.external_id as string, id:d.transaction_id as string, cents};

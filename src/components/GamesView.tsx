@@ -1,3 +1,5 @@
+import { affiliateGameKey, planGames, type AffiliatePlanId } from '../../shared/affiliatePlans';
+import { Modal } from './Modal';
 import {CurvedGameGallery} from './CurvedGameGallery';
 import {CountMastersPlayerView} from './CountMastersPlayerView';
 import {GameMetricsSheet} from './GameMetricsSheet';
@@ -28,6 +30,8 @@ import {
 } from 'lucide-react';
 
 interface GamesViewProps {
+  planAccess?: {planId:AffiliatePlanId;games:string[]};
+  onUpgradePlan?:()=>void;
   games?: Game[];
   onPlayingChange?:(playing:boolean)=>void;
   user: User;
@@ -108,6 +112,7 @@ const GAMES_LIST: GameCatalogItem[] = [
 
 export const GamesView: React.FC<GamesViewProps> = ({
   games = [],
+  planAccess,onUpgradePlan,
   onPlayingChange,
   user,
   affiliateInfo,
@@ -153,8 +158,11 @@ export const GamesView: React.FC<GamesViewProps> = ({
     return [...GAMES_LIST, ...dynamicGames];
   }, [games]);
 
+  const [upgradeOpen,setUpgradeOpen]=useState(false);
+  const canIndicateGame=(id:string)=>!planAccess||planAccess.planId==='escale'||(planAccess.planId==='starter'?planAccess.games.includes(affiliateGameKey(id)):planGames.some(game=>game.id===affiliateGameKey(id)));
   const handleIndicateGame = async (e: React.MouseEvent | undefined, game: GameCatalogItem) => {
     e?.stopPropagation();
+    if(!canIndicateGame(game.id)){setUpgradeOpen(true);return;}
     if (!referralCode) { onShowToast('Seu link de indicação ainda não está disponível.', 'info'); return; }
     const normalizedGame = normalizeGameId(game.id);
     const gameDomain = normalizedGame === 'raspa-fortuna'
@@ -398,6 +406,10 @@ export const GamesView: React.FC<GamesViewProps> = ({
 
   const availableCategories=categories.filter(c=>c.id==='todos'||catalogGames.some(g=>g.category===c.id));
   return <div className="games-view clean-section games-clean"><header className="clean-heading"><div><span>EXPLORE O CATÁLOGO</span><h1>Jogos<span>.</span></h1><p>Encontre, acompanhe e compartilhe.</p></div><span className="clean-count">{catalogGames.length} jogos</span></header><section className="clean-game-toolbar"><label className="clean-search"><Search size={17}/><input type="search" aria-label="Buscar jogos" placeholder="Qual jogo você procura?" value={searchQuery} onChange={e=>setSearchQuery(e.target.value)}/>{searchQuery&&<button onClick={()=>setSearchQuery('')} aria-label="Limpar busca"><X size={15}/></button>}</label><div className="clean-tabs" aria-label="Categorias de jogos">{availableCategories.map(c=><button key={c.id} aria-pressed={activeCategory===c.id} className={activeCategory===c.id?'active':''} onClick={()=>setActiveCategory(c.id as typeof activeCategory)}>{c.label}</button>)}</div></section><div className="clean-catalog-heading"><h2>{activeCategory==='todos'?'Todos os jogos':categories.find(c=>c.id===activeCategory)?.label}</h2><span>{filteredGames.length} disponíveis</span></div>{filteredGames.length?<CurvedGameGallery>{filteredGames.map((game,index)=><article className="curved-game-slot" key={game.id}><div className="curved-game-surface"><button type="button" className="curved-game-banner" aria-label={showAffiliateMetrics ? `Ver desempenho de ${game.title}` : `Jogar ${game.title}`} onClick={()=>showAffiliateMetrics ? setMetricsGame(game) : launchGame(game)}><img className="curved-game-art" src={game.image} alt="" width={1932} height={814} loading={index===0?'eager':'lazy'} decoding="async"/></button><footer className="curved-game-footer"><div><h3>{game.title}</h3><p>{categories.find(c=>c.id===game.category)?.label||game.category}</p></div><nav aria-label={`Ações de ${game.title}`}><button onClick={e=>void handleIndicateGame(e,game)}><Send size={13}/>Indicar</button>{showAffiliateMetrics && <button type="button" onClick={()=>setMetricsGame(game)} aria-label={`Ver desempenho de ${game.title}`}><TrendingUp size={14}/>Desempenho</button>}</nav></footer></div></article>)}</CurvedGameGallery>:<div className="clean-empty"><Search size={28}/><h3>Nenhum jogo encontrado</h3><p>Tente outro nome ou escolha outra categoria.</p><button onClick={()=>{setSearchQuery('');setActiveCategory('todos')}}>Limpar filtros</button></div>}
+        <Modal isOpen={upgradeOpen} onClose={()=>setUpgradeOpen(false)} title="Libere mais jogos">
+          <p>Seu plano atual não inclui este jogo. Faça upgrade pagando só a diferença entre os planos.</p>
+          <button type="button" className="plan-upgrade" onClick={()=>{setUpgradeOpen(false);onUpgradePlan?.();}}>Ver opções de upgrade</button>
+        </Modal>
         {metricsGame && <GameMetricsSheet game={metricsGame} gameId={normalizeGameId(metricsGame.id).toLowerCase()} authToken={authToken} metrics={affiliateInfo ? getGameAffiliateMetrics(metricsGame) : null} onClose={()=>setMetricsGame(null)} onShare={()=>void handleIndicateGame(undefined,metricsGame)}/>}
 </div>;
 };

@@ -1,3 +1,5 @@
+import {affiliateGameKey,planGames} from './shared/affiliatePlans.ts';
+import {affiliatePlansEnabled,registerAffiliatePlanCheckout,confirmAffiliatePlan,PLAN_REFERENCE} from './server/affiliatePlanCheckout.ts';
 import {registerSupport} from './server/supportRoutes.ts';
 import {registerGameRegions} from './server/gameRegions.ts';
 import {recordPixupReversal} from './server/gatewayReversals.ts';
@@ -822,8 +824,16 @@ async function startServer() {
     if (!getSession(token)) return res.status(401).json({ error: 'Entre na sua conta para continuar.' });
     // Legacy handlers now receive only a verified session token.
     req.headers.authorization = `Bearer ${token}`;
-    return requireAuth(req, res, next);
+    return requireAuth(req, res, async () => {
+      if (!req.user?.affiliatePlanRequired || /^\/(?:affiliate-plans(?:\/|$)|support(?:\/|$)|auth\/(?:me|logout)$)/.test(req.path)) return next();
+      try {
+        const plan=(await supabaseStore.collection('affiliate_plan_accounts').doc(req.userId!).get()).data();
+        if(plan?.planId) return next();
+        return res.status(403).json({error:'Ative um plano de afiliados para continuar.'});
+      } catch { return res.status(503).json({error:'Não foi possível consultar seu plano.'}); }
+    });
   });
+  registerAffiliatePlanCheckout(app);
   app.use('/api/partner', createPartnerRouter(requireAuth, sendPushNotification, logSecurityEvent));
 
   registerSupport(app,requireAuth,requireAdmin,req=>checkAdminPermission(req,'canManageUsers'),id=>dbService.getUserTransactions(id));
@@ -1402,6 +1412,21 @@ async function startServer() {
 
       console.log(`[Register Tracking] User ${email} registered. Resolved game: ${registeredGame} (source: ${trackingResult.trackingSource}, partner: ${partnerUser ? partnerUser.name || partnerUser.id : 'none'})`);
 
+      if (!isAffiliatePortal) {
+        const sponsorId=influencerAff?.userId||responsibleAff?.userId||referringAffiliateUserId;
+        if(sponsorId){
+          const sponsor=await dbService.getUserById(sponsorId);
+          if(sponsor?.affiliatePlanRequired){
+            const access=(await supabaseStore.collection('affiliate_plan_accounts').doc(sponsorId).get()).data();
+            const gameKey=affiliateGameKey(registeredGame);
+            if(!access?.planId||(access.planId==='starter'&&!access.games?.includes(gameKey))||
+              (access.planId==='alliance'&&!planGames.some(g=>g.id===gameKey))){
+              return res.status(400).json({error:'Este convite não está ativo para o jogo selecionado.'});
+            }
+          }
+        }
+      }
+
       // Create User - attributing to the responsible affiliate's base
       const targetParentAffId = responsibleAff ? responsibleAff.id : (influencerAff?.id || referringAffiliateId);
       const targetParentUserId = responsibleUser ? responsibleUser.id : (influencerUser?.id || referringAffiliateUserId);
@@ -1435,6 +1460,7 @@ async function startServer() {
         gameBalances: { [registeredGame]: 0.0 },
         createdAt,
         role: isAffiliatePortal ? 'affiliate' : 'user',
+        ...(isAffiliatePortal && affiliatePlansEnabled()?{affiliatePlanRequired:true}:{}),
       };
 
       await dbService.createUser(newUser);
@@ -1445,7 +1471,7 @@ async function startServer() {
           id: 'aff_' + crypto.randomBytes(12).toString('hex'),
           userId: newUser.id,
           referralCode: userReferralCode,
-          status: 'active',
+          status: newUser.affiliatePlanRequired ? 'pending' : 'active',
           commissionTotal: 0,
           affiliateBalance: 0,
           cpaAmount: 0,
@@ -1515,6 +1541,7 @@ async function startServer() {
 
       const userObj = {
         id: newUser.id,
+        affiliatePlanRequired: !!newUser.affiliatePlanRequired,
         name: newUser.name,
         email: newUser.email,
         phone: newUser.phone,
@@ -1659,6 +1686,7 @@ async function startServer() {
 
       const userObj = {
         id: user.id,
+        affiliatePlanRequired: !!user.affiliatePlanRequired,
         name: user.name,
         email: user.email,
         phone: user.phone,
@@ -1767,6 +1795,7 @@ async function startServer() {
 
     const userPayload = {
       id: user.id,
+      affiliatePlanRequired: !!user.affiliatePlanRequired,
       name: user.name,
       email: user.email,
       phone: user.phone,
@@ -12539,6 +12568,10 @@ CREATE TABLE IF NOT EXISTS system_settings (
       try{await recordPixupReversal(req.body,incomingEvent);return res.sendStatus(200);}catch{return res.sendStatus(503);}
     }
     if (req.get('X-Webhook-Event') === 'cashin.confirmed') {
+      if(PLAN_REFERENCE.test(String(req.body?.data?.external_id||''))){
+        try{return res.sendStatus(await confirmAffiliatePlan(req.body)?200:400);}
+        catch{return res.sendStatus(503);}
+      }
       let deposit;
       try { deposit = parsePixupDepositEvent(req.body, 'cashin.confirmed'); }
       catch { return res.sendStatus(400); }

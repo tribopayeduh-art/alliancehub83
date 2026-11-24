@@ -31,7 +31,9 @@ export function registerSupport(app:Express,auth:RequestHandler,admin:RequestHan
    result={answer:'Não consegui confirmar o status no extrato agora. Vou encaminhar para análise sem assumir o resultado da operação.',suggestion:'Consultar o extrato da conta e confirmar o status pelo identificador informado antes de orientar.',escalate:true};
   }
   if(!result.escalate&&req.body?.ticket!==true)return res.json({answer:result.answer});
-  const candidate:SupportTicket={id:randomUUID(),userId:req.userId,topic,question,diagnosis:result.answer,suggestion:result.suggestion,status:'open',createdAt:new Date(now).toISOString(),...(result.transactionId?{transactionId:result.transactionId}:{})};
+  const plan=(await supabaseStore.collection('affiliate_plan_accounts').doc(req.userId).get()).data();
+
+  const candidate:SupportTicket={id:randomUUID(),userId:req.userId,topic,question,diagnosis:result.answer,suggestion:result.suggestion,priority:plan?.planId==='escale',status:'open',createdAt:new Date(now).toISOString(),...(result.transactionId?{transactionId:result.transactionId}:{})};
   const open=(await recent({userId:req.userId,status:'open'},20)).find(t=>t.topic===topic&&(candidate.transactionId ? t.transactionId===candidate.transactionId : t.question===question));
   if(open)return res.json({answer:result.answer,ticket:own(open)});
   await tickets.doc(candidate.id).set(candidate);
@@ -41,7 +43,8 @@ export function registerSupport(app:Express,auth:RequestHandler,admin:RequestHan
  app.get('/api/admin/support/tickets',admin,wrap(async(req,res)=>{
   if(!canManage(req))return res.sendStatus(403);
   const status=req.query.status==='approved'||req.query.status==='rejected'?req.query.status:'open';
-  return res.json({items:await recent({status},75)});
+  const [priority,latest]=await Promise.all([recent({status,priority:true} as any,75),recent({status},75)]);
+  return res.json({items:[...new Map([...priority,...latest].map(t=>[t.id,t])).values()].slice(0,75)});
  }));
  app.post('/api/admin/support/tickets/:id/decision',admin,wrap(async(req,res)=>{
   if(!canManage(req))return res.sendStatus(403);
