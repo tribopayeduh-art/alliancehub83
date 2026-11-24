@@ -62,3 +62,23 @@
 .legacy-upgrade-detail [role=status]{font-size:13px;background:transparent;color:#505b6c;padding:0}
 .legacy-upgrade-detail .plan-upgrade{justify-content:space-between;width:100%}
 @keyframes legacy-fill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+.legacy-plan .legacy-intro{margin:23px 0 13px}
+.legacy-plan .legacy-intro h1{margin-bottom:0}
+.legacy-current-line{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;padding:11px 13px;margin-bottom:10px;border:1px solid #e1e5ed;border-radius:13px;background:#fff}
+.legacy-current-line h2{font-size:16px}.legacy-current-line p{font-size:12px}.legacy-current-line>strong{font-size:21px;font-variant-numeric:tabular-nums}
+.legacy-hero{display:grid;grid-template-columns:minmax(0,1fr) clamp(84px,23vw,122px);align-items:center;gap:12px;position:relative;overflow:hidden;isolation:isolate;border-radius:18px;padding:clamp(14px,4vw,26px);background:#1c2639;color:#fafbff;animation:plan-in .4s ease both}
+.legacy-hero::before{content:"";z-index:-1;position:absolute;inset:0;background:radial-gradient(ellipse at 100% 0,#637aa052,transparent 60%),repeating-linear-gradient(128deg,transparent 0 22px,#fff0 22px 23px,#ffffff0c 23px 24px)}
+.legacy-hero h2{font-size:clamp(30px,8vw,52px);letter-spacing:-.045em;margin:5px 0}
+.legacy-hero .legacy-hero-label{color:#cad5e7;font-size:9px;font-weight:650;letter-spacing:.09em;line-height:1.35;display:block}
+.legacy-hero p{font-size:13px;color:#dce4f1}
+.legacy-gauge{position:relative;display:grid;place-items:center;aspect-ratio:1}
+.legacy-gauge svg{width:100%;height:100%;position:absolute;inset:0;fill:none;stroke-width:6;transform:rotate(-90deg)}
+.legacy-gauge-track{stroke:#ffffff29}
+.legacy-gauge-fill{stroke:#b6c7ec;stroke-linecap:round;stroke-dasharray:85 100;animation:legacy-gauge-in .8s cubic-bezier(.23,.75,.25,1) both}
+.legacy-gauge strong{font-size:clamp(21px,6vw,33px);font-weight:650}
+.legacy-hero-footer{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.legacy-hero-footer button{background:#f5f7ff;color:#202b3e;min-height:44px;transition:transform .18s ease;white-space:nowrap}
+.legacy-hero-footer button:hover{transform:translateY(-2px)}.legacy-hero-footer button:active{transform:scale(.98)}
+.legacy-hero-footer span{color:#c7d2e7;font-size:11px}.legacy-delta dd span{display:inline-block;animation:plan-in .2s ease both}
+@keyframes legacy-gauge-in{from{stroke-dasharray:0 100}to{stroke-dasharray:85 100}}
