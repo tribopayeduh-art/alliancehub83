@@ -1,3 +1,4 @@
+import {affiliateOfferDay,affiliateOfferId} from './affiliatePlanOffer.ts';
 import crypto from 'node:crypto';
 import type {Express} from 'express';
 import {affiliatePlans,findAffiliatePlan,planDifference,planGames,type AffiliatePlanId} from '../shared/affiliatePlans.ts';
@@ -45,7 +46,9 @@ export function registerAffiliatePlanCheckout(app:Express){
   try {
    const account=(await accounts(supabaseStore).doc(req.userId).get()).data();
    const order=account?.orderRef?(await collection(supabaseStore).doc(account.orderRef).get()).data() as Order:undefined;
-   return res.json({required:!!req.user?.affiliatePlanRequired&&!account?.planId,planId:account?.planId??null,games:account?.games??[],plans:affiliatePlans,catalog:planGames,order:order?.status==='pending'?order:null});
+   const offer=account?.planId==='starter'?(await supabaseStore.collection('affiliate_plan_offers').doc(affiliateOfferId(req.userId,affiliateOfferDay())).get()).data():null;
+   const upgrade=offer?.count===6?{day:offer.day,differenceCents:offer.differenceCents,priceCents:planDifference('escale','starter')}:null;
+   return res.json({upgrade,required:!!req.user?.affiliatePlanRequired&&!account?.planId,planId:account?.planId??null,games:account?.games??[],plans:affiliatePlans,catalog:planGames,order:order?.status==='pending'?order:null});
   }catch{return res.status(503).json({error:'Não foi possível consultar seu plano.'});}
  });
  app.post('/api/affiliate-plans/checkout',async(req:any,res)=>{

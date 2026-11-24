@@ -1,3 +1,4 @@
+import {advanceAffiliateOffer,affiliateOfferDay,affiliateOfferId} from './affiliatePlanOffer.ts';
 import {findAffiliatePlan} from '../shared/affiliatePlans.ts';
 import crypto from 'node:crypto';
 import {supabaseStore} from './supabaseStore.ts';
@@ -16,12 +17,14 @@ export async function prepareDepositLedger(tx:any,user:any,id:string,amount:numb
  const hu=hub?await read('users',hub.userId):null;
  if(!inf&&hu?.isInfluencer){inf=hu;hub=await affiliate(hu.parentAffiliateId,hu.parentAffiliateUserId);}
  const owner=hub?await read('users',hub.userId):null;
+ let starterOwner:string|undefined;
  const rates:any[]=[];let issue=inf?.id===user.id?'SELF_REFERRAL_REVIEW':'';
  const rate=(n:any,fallback=0)=>{const v=Number(n??fallback);if(!Number.isFinite(v)||v<0||v>100){issue='INVALID_COMMISSION_RATE';return 0;}return v;};
  if(hub&&owner){
   if(owner.id===user.id||String(owner.email||'').toLowerCase()===String(user.email||'').toLowerCase()){issue='SELF_REFERRAL_REVIEW';}
   const entitlement=owner.affiliatePlanRequired?await read('affiliate_plan_accounts',owner.id):null;
   const tier=findAffiliatePlan(entitlement?.planId);
+  if(tier?.id==='starter')starterOwner=owner.id;
   const gross=rate(tier?.commissionPercent??hub.revSharePercent,70),ir=inf&&inf.id!==hub.userId?rate(inf.influencerRate):0;
   if(ir>gross)issue='INFLUENCER_RATE_EXCEEDS_HUB_RATE';
   rates.push({affiliate:hub,rate:Math.max(0,gross-ir),kind:'hub'});
@@ -33,10 +36,15 @@ export async function prepareDepositLedger(tx:any,user:any,id:string,amount:numb
  const totalRate=rates.reduce((a,r)=>a+r.rate,0);if(totalRate>100.000001)issue='TOTAL_COMMISSION_EXCEEDS_DEPOSIT';
  const cents=Math.round(amount*100),legs=rates.map(r=>({affiliateId:r.affiliate.id,userId:r.affiliate.userId,rate:r.rate,kind:r.kind,amountCents:Math.floor(cents*r.rate/100)}));
  const firstRef=store.collection('first_cash_deposit').doc(user.id),first=(await tx.get(firstRef)).data();
+ const offerAt=new Date(), offerDay=affiliateOfferDay(offerAt);
+ const offerRef=starterOwner&&!issue&&legs.some(l=>l.kind==='hub'&&l.amountCents>0)
+  ?store.collection('affiliate_plan_offers').doc(affiliateOfferId(starterOwner,offerDay)):null;
+ const offer=offerRef?advanceAffiliateOffer((await tx.get(offerRef)).data(),cents):null;
  return ()=>{
   if(!first)tx.set(firstRef,{transactionId:id,createdAt:new Date().toISOString()});
   tx.set(receipt,{id,userId:user.id,amountCents:cents,legs,state:issue?'review':'completed',reason:issue||null,createdAt:existing?.createdAt||new Date().toISOString(),updatedAt:new Date().toISOString(),isFtd:existing?.isFtd??!first});
   if(issue)return;
+  if(offerRef&&offer)tx.set(offerRef,{...offer,userId:starterOwner,day:offerDay,updatedAt:offerAt.toISOString()});
   const grouped=new Map<string,any>();for(const r of rates){const a=grouped.get(r.affiliate.id)||{affiliate:r.affiliate,cents:0};a.cents+=Math.floor(cents*r.rate/100);grouped.set(r.affiliate.id,a);}
   for(const [aid,g] of grouped){const value=g.cents/100,repay=Math.min(Number(g.affiliate.commissionDebt||0),value);tx.update(store.collection('affiliates').doc(aid),{commissionDebt:Math.round((Number(g.affiliate.commissionDebt||0)-repay)*100)/100,affiliateBalance:Math.round((Number(g.affiliate.affiliateBalance||0)+value-repay)*100)/100,commissionTotal:Math.round((Number(g.affiliate.commissionTotal||0)+value)*100)/100});const cid='ledger_'+crypto.createHash('sha256').update(id+':'+aid).digest('hex');tx.set(store.collection('affiliateCommissions').doc(cid),{id:cid,affiliateId:aid,referrerUserId:g.affiliate.userId,buyerUserId:user.id,transactionId:id,amount:value,isKilled:false,createdAt:new Date().toISOString(),source:'deposit-ledger-v1'});}
  };

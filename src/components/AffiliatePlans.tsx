@@ -6,11 +6,11 @@ import {requestJson} from '../lib/requestJson';
 import {Modal} from './Modal';
 import './affiliate-plans.css';
 
-export type PlanAccount={required:boolean;planId:AffiliatePlanId|null;games:string[];order?:{planId:AffiliatePlanId;games?:string[];qrcode?:string;cents:number;expiresAt?:string|null}};
+export type PlanAccount={upgrade?:{day:string;differenceCents:number;priceCents:number}|null;required:boolean;planId:AffiliatePlanId|null;games:string[];order?:{planId:AffiliatePlanId;games?:string[];qrcode?:string;cents:number;expiresAt?:string|null}};
 const money=(cents:number)=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(cents/100);
-export function AffiliatePlans({token,account,reload,onBack,onExit}:{token:string;account:PlanAccount;reload:()=>Promise<void>;onBack?:()=>void;onExit:()=>void}){
+export function AffiliatePlans({token,account,reload,onBack,onExit,initialPlan}:{token:string;initialPlan?:AffiliatePlanId;account:PlanAccount;reload:()=>Promise<void>;onBack?:()=>void;onExit:()=>void}){
  const [selected,setSelected]=useState<string[]>(account.games);
- const [target,setTarget]=useState<AffiliatePlanId>(account.order?.planId??account.planId??'starter');
+ const [target,setTarget]=useState<AffiliatePlanId>(account.order?.planId??initialPlan??account.planId??'starter');
  const [upgrade,setUpgrade]=useState(false);
  const [busy,setBusy]=useState(false);
  const [error,setError]=useState('');

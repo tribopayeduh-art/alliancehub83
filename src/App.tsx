@@ -1,3 +1,4 @@
+import { Modal } from './components/Modal';
 import { AffiliatePlans, type PlanAccount } from './components/AffiliatePlans';
 import { UtmifyIntegration } from './components/UtmifyIntegration';
 import {SupportCenter,SupportTour} from './components/SupportCenter';
@@ -458,6 +459,19 @@ function AppContent({onGameModeChange}:{onGameModeChange:(value:boolean)=>void})
     setPlanAccount(null);setPlanError('');
     if(planRequired)void reloadPlan().catch(e=>setPlanError(e.message));
   },[reloadPlan,planRequired]);
+
+  const [offerDismissed,setOfferDismissed]=useState('');
+  const [offerUpgrade,setOfferUpgrade]=useState(false);
+  useEffect(()=>{
+    if(planAccount?.planId!=='starter')return;
+    const id=window.setInterval(()=>{if(!document.hidden)void reloadPlan().catch(()=>{});},20000);
+    return()=>clearInterval(id);
+  },[planAccount?.planId,reloadPlan]);
+  const offer=planAccount?.planId==='starter'?planAccount.upgrade:null;
+  const offerKey=offer&&user?.id?`inex:escale-offer:${user.id}:${offer.day}`:'';
+  const alreadySeen=(()=>{try{return !!offerKey&&localStorage.getItem(offerKey)==='seen';}catch{return false;}})();
+  const dismissOffer=()=>{setOfferDismissed(offerKey);try{if(offerKey)localStorage.setItem(offerKey,'seen');}catch{}};
+  const offerMoney=(cents:number)=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(cents/100);
 
   // 2. Fetch User Data on mount or token change
   useEffect(() => {
@@ -964,12 +978,20 @@ function AppContent({onGameModeChange}:{onGameModeChange:(value:boolean)=>void})
 
   if(planRequired&&token&&(!planAccount||planAccount.required||activeTab==='more'&&subView==='plans')){
     if(!planAccount)return <main className="affiliate-plans"><h1>{planError?'Não foi possível consultar seu plano':'Consultando seu plano…'}</h1>{planError&&<><p role="alert">{planError}</p><button type="button" onClick={()=>void reloadPlan().catch(e=>setPlanError(e.message))}>Tentar novamente</button></>}<button type="button" onClick={()=>void handleLogout()}>Sair</button></main>;
-    return <AffiliatePlans token={token} account={planAccount} reload={reloadPlan} onExit={()=>void handleLogout()} onBack={planAccount.required?undefined:()=>setSubView('main')}/>;
+    return <AffiliatePlans initialPlan={offerUpgrade?'escale':undefined} token={token} account={planAccount} reload={reloadPlan} onExit={()=>void handleLogout()} onBack={planAccount.required?undefined:()=>{setOfferUpgrade(false);setSubView('main');}}/>;
   }
 
   // Render Authenticated Mobile Container
   return (
     <div className="min-h-screen bg-[#f8f9fa] flex items-center justify-center p-0 sm:px-1.5 lg:px-2 sm:py-1 lg:py-1.5">
+      {offer&&<Modal isOpen={!!offerKey&&!alreadySeen&&offerDismissed!==offerKey} onClose={dismissOffer} title="6 conversões confirmadas hoje">
+        <div className="plan-payment">
+          <p>Com 85% no Escale, a comissão bruta sobre essas 6 conversões teria sido <strong>{offerMoney(offer.differenceCents)}</strong> maior, antes de eventuais divisões.</p>
+          <p>É uma estimativa. As comissões já registradas não mudam.</p>
+          <button type="button" onClick={()=>{dismissOffer();setOfferUpgrade(true);setActiveTab('more');setSubView('plans');}}>Ver upgrade Escale · {offerMoney(offer.priceCents)}</button>
+          <button type="button" onClick={dismissOffer}>Agora não</button>
+        </div>
+      </Modal>}
       {/* Responsive Shell Frame: edge-to-edge mobile and expansive fluid layout for tablet & desktop */}
       <div className="alliance-app-shell w-full max-w-full lg:max-w-[99.2vw] 2xl:max-w-[2400px] bg-white min-h-screen sm:min-h-[820px] border-x-0 sm:border sm:border-zinc-200/90 shadow-2xl relative overflow-hidden flex flex-col justify-between transition-[max-width,border-radius] duration-300 sm:rounded-2xl lg:rounded-[22px]">
         {/* Toast */}
