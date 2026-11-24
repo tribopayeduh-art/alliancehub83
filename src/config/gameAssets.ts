@@ -44,3 +44,11 @@ export function getGameCover(gameId: string): string {
   if (id.includes('dino')) return GAME_ASSETS.genDino.cover;
   return GAME_ASSETS.blockWin.cover;
 }
+
+export const GAME_DOMAINS: Readonly<Record<string, string | undefined>> = Object.freeze({
+  blockwin: 'https://blockwinner.site',
+  'gen-dino': 'https://dinopay.site',
+  'raspa-fortuna': 'https://raspadinhaadasorte.site',
+  subwaypay: 'https://joguesubway.surf',
+  bubbleblast: 'https://jogarbubble.online',
+});

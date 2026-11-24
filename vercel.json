@@ -315,5 +315,357 @@
       ],
       "destination": "/game-entry/bubbleblast.html"
     }
+  ],
+  "redirects": [
+    {
+      "source": "/:entry(blockwin|block-win|block-puzzle|blockwinner)/:page(login|cadastro)",
+      "has": [
+        {
+          "type": "host",
+          "value": "(?:www\\.)?goalliancehub\\.com"
+        }
+      ],
+      "destination": "https://blockwinner.site/:page",
+      "permanent": false
+    },
+    {
+      "source": "/:entry(blockwin|block-win|block-puzzle|blockwinner)/:page(index\\.html)?",
+      "has": [
+        {
+          "type": "host",
+          "value": "(?:www\\.)?goalliancehub\\.com"
+        }
+      ],
+      "destination": "https://blockwinner.site/",
+      "permanent": false
+    },
+    {
+      "source": "/:page(login|cadastro)?",
+      "has": [
+        {
+          "type": "host",
+          "value": "(?:www\\.)?goalliancehub\\.com"
+        },
+        {
+          "type": "query",
+          "key": "site",
+          "value": "(?:blockwin|block-win|block-puzzle|blockwinner|g_block_puzzle)"
+        }
+      ],
+      "destination": "https://blockwinner.site/:page",
+      "permanent": false
+    },
+    {
+      "source": "/:page(login|cadastro)?",
+      "has": [
+        {
+          "type": "host",
+          "value": "(?:www\\.)?goalliancehub\\.com"
+        },
+        {
+          "type": "query",
+          "key": "game",
+          "value": "(?:blockwin|block-win|block-puzzle|blockwinner|g_block_puzzle)"
+        }
+      ],
+      "destination": "https://blockwinner.site/:page",
+      "permanent": false
+    },
+    {
+      "source": "/api/referrals/game-visit",
+      "has": [
+        {
+          "type": "host",
+          "value": "(?:www\\.)?goalliancehub\\.com"
+        },
+        {
+          "type": "query",
+          "key": "game",
+          "value": "(?:blockwin|block-win|block-puzzle|blockwinner|g_block_puzzle)"
+        }
+      ],
+      "destination": "https://blockwinner.site/api/referrals/game-visit",
+      "permanent": false
+    },
+    {
+      "source": "/:entry(gen-dino|gendino|dinopay|dinoplay|dinipay)/:page(login|cadastro)",
+      "has": [
+        {
+          "type": "host",
+          "value": "(?:www\\.)?goalliancehub\\.com"
+        }
+      ],
+      "destination": "https://dinopay.site/:page",
+      "permanent": false
+    },
+    {
+      "source": "/:entry(gen-dino|gendino|dinopay|dinoplay|dinipay)/:page(index\\.html)?",
+      "has": [
+        {
+          "type": "host",
+          "value": "(?:www\\.)?goalliancehub\\.com"
+        }
+      ],
+      "destination": "https://dinopay.site/",
+      "permanent": false
+    },
+    {
+      "source": "/:page(login|cadastro)?",
+      "has": [
+        {
+          "type": "host",
+          "value": "(?:www\\.)?goalliancehub\\.com"
+        },
+        {
+          "type": "query",
+          "key": "site",
+          "value": "(?:gen-dino|gen_dino|gendino|dino|dinopay|g_gen_dino)"
+        }
+      ],
+      "destination": "https://dinopay.site/:page",
+      "permanent": false
+    },
+    {
+      "source": "/:page(login|cadastro)?",
+      "has": [
+        {
+          "type": "host",
+          "value": "(?:www\\.)?goalliancehub\\.com"
+        },
+        {
+          "type": "query",
+          "key": "game",
+          "value": "(?:gen-dino|gen_dino|gendino|dino|dinopay|g_gen_dino)"
+        }
+      ],
+      "destination": "https://dinopay.site/:page",
+      "permanent": false
+    },
+    {
+      "source": "/api/referrals/game-visit",
+      "has": [
+        {
+          "type": "host",
+          "value": "(?:www\\.)?goalliancehub\\.com"
+        },
+        {
+          "type": "query",
+          "key": "game",
+          "value": "(?:gen-dino|gen_dino|gendino|dino|dinopay|g_gen_dino)"
+        }
+      ],
+      "destination": "https://dinopay.site/api/referrals/game-visit",
+      "permanent": false
+    },
+    {
+      "source": "/:entry(raspafortuna|raspa-fortuna|raspadinhaadasorte)/:page(login|cadastro)",
+      "has": [
+        {
+          "type": "host",
+          "value": "(?:www\\.)?goalliancehub\\.com"
+        }
+      ],
+      "destination": "https://raspadinhaadasorte.site/:page",
+      "permanent": false
+    },
+    {
+      "source": "/:entry(raspafortuna|raspa-fortuna|raspadinhaadasorte)/:page(index\\.html)?",
+      "has": [
+        {
+          "type": "host",
+          "value": "(?:www\\.)?goalliancehub\\.com"
+        }
+      ],
+      "destination": "https://raspadinhaadasorte.site/",
+      "permanent": false
+    },
+    {
+      "source": "/:page(login|cadastro)?",
+      "has": [
+        {
+          "type": "host",
+          "value": "(?:www\\.)?goalliancehub\\.com"
+        },
+        {
+          "type": "query",
+          "key": "site",
+          "value": "(?:raspa-fortuna|raspa_fortuna|raspafortuna|raspa|g_raspa_fortuna)"
+        }
+      ],
+      "destination": "https://raspadinhaadasorte.site/:page",
+      "permanent": false
+    },
+    {
+      "source": "/:page(login|cadastro)?",
+      "has": [
+        {
+          "type": "host",
+          "value": "(?:www\\.)?goalliancehub\\.com"
+        },
+        {
+          "type": "query",
+          "key": "game",
+          "value": "(?:raspa-fortuna|raspa_fortuna|raspafortuna|raspa|g_raspa_fortuna)"
+        }
+      ],
+      "destination": "https://raspadinhaadasorte.site/:page",
+      "permanent": false
+    },
+    {
+      "source": "/api/referrals/game-visit",
+      "has": [
+        {
+          "type": "host",
+          "value": "(?:www\\.)?goalliancehub\\.com"
+        },
+        {
+          "type": "query",
+          "key": "game",
+          "value": "(?:raspa-fortuna|raspa_fortuna|raspafortuna|raspa|g_raspa_fortuna)"
+        }
+      ],
+      "destination": "https://raspadinhaadasorte.site/api/referrals/game-visit",
+      "permanent": false
+    },
+    {
+      "source": "/:entry(subwaypay|subway-pay|subway)/:page(login|cadastro)",
+      "has": [
+        {
+          "type": "host",
+          "value": "(?:www\\.)?goalliancehub\\.com"
+        }
+      ],
+      "destination": "https://joguesubway.surf/:page",
+      "permanent": false
+    },
+    {
+      "source": "/:entry(subwaypay|subway-pay|subway)/:page(index\\.html)?",
+      "has": [
+        {
+          "type": "host",
+          "value": "(?:www\\.)?goalliancehub\\.com"
+        }
+      ],
+      "destination": "https://joguesubway.surf/",
+      "permanent": false
+    },
+    {
+      "source": "/:page(login|cadastro)?",
+      "has": [
+        {
+          "type": "host",
+          "value": "(?:www\\.)?goalliancehub\\.com"
+        },
+        {
+          "type": "query",
+          "key": "site",
+          "value": "(?:subwaypay|subway-pay|subway_pay|subway|g_subway_pay)"
+        }
+      ],
+      "destination": "https://joguesubway.surf/:page",
+      "permanent": false
+    },
+    {
+      "source": "/:page(login|cadastro)?",
+      "has": [
+        {
+          "type": "host",
+          "value": "(?:www\\.)?goalliancehub\\.com"
+        },
+        {
+          "type": "query",
+          "key": "game",
+          "value": "(?:subwaypay|subway-pay|subway_pay|subway|g_subway_pay)"
+        }
+      ],
+      "destination": "https://joguesubway.surf/:page",
+      "permanent": false
+    },
+    {
+      "source": "/api/referrals/game-visit",
+      "has": [
+        {
+          "type": "host",
+          "value": "(?:www\\.)?goalliancehub\\.com"
+        },
+        {
+          "type": "query",
+          "key": "game",
+          "value": "(?:subwaypay|subway-pay|subway_pay|subway|g_subway_pay)"
+        }
+      ],
+      "destination": "https://joguesubway.surf/api/referrals/game-visit",
+      "permanent": false
+    },
+    {
+      "source": "/:entry(bubbleblast|bubble-blast|game-bubble|bubbles-win|bubbleblast-game|zumbla)/:page(login|cadastro)",
+      "has": [
+        {
+          "type": "host",
+          "value": "(?:www\\.)?goalliancehub\\.com"
+        }
+      ],
+      "destination": "https://jogarbubble.online/:page",
+      "permanent": false
+    },
+    {
+      "source": "/:entry(bubbleblast|bubble-blast|game-bubble|bubbles-win|bubbleblast-game|zumbla)/:page(index\\.html)?",
+      "has": [
+        {
+          "type": "host",
+          "value": "(?:www\\.)?goalliancehub\\.com"
+        }
+      ],
+      "destination": "https://jogarbubble.online/",
+      "permanent": false
+    },
+    {
+      "source": "/:page(login|cadastro)?",
+      "has": [
+        {
+          "type": "host",
+          "value": "(?:www\\.)?goalliancehub\\.com"
+        },
+        {
+          "type": "query",
+          "key": "site",
+          "value": "(?:bubbleblast|bubble-blast|bubble_blast|bubble|bubbles|bubbles-win|zumbla|g_bubble_blast)"
+        }
+      ],
+      "destination": "https://jogarbubble.online/:page",
+      "permanent": false
+    },
+    {
+      "source": "/:page(login|cadastro)?",
+      "has": [
+        {
+          "type": "host",
+          "value": "(?:www\\.)?goalliancehub\\.com"
+        },
+        {
+          "type": "query",
+          "key": "game",
+          "value": "(?:bubbleblast|bubble-blast|bubble_blast|bubble|bubbles|bubbles-win|zumbla|g_bubble_blast)"
+        }
+      ],
+      "destination": "https://jogarbubble.online/:page",
+      "permanent": false
+    },
+    {
+      "source": "/api/referrals/game-visit",
+      "has": [
+        {
+          "type": "host",
+          "value": "(?:www\\.)?goalliancehub\\.com"
+        },
+        {
+          "type": "query",
+          "key": "game",
+          "value": "(?:bubbleblast|bubble-blast|bubble_blast|bubble|bubbles|bubbles-win|zumbla|g_bubble_blast)"
+        }
+      ],
+      "destination": "https://jogarbubble.online/api/referrals/game-visit",
+      "permanent": false
+    }
   ]
 }

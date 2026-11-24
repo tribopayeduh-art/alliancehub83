@@ -10,7 +10,7 @@ import { GenDinoPlayerView } from './GenDinoPlayerView';
 import { RaspaFortunaPlayerView } from './RaspaFortunaPlayerView';
 import { SubwayPayPlayerView } from './SubwayPayPlayerView';
 import { BubbleBlastPlayerView } from './BubbleBlastPlayerView';
-import { GAME_ASSETS } from '../config/gameAssets';
+import { GAME_ASSETS, GAME_DOMAINS } from '../config/gameAssets';
 import { setTrackedGame } from '../lib/gameTracking';
 import { applyGameSEO } from '../lib/seo';
 import {
@@ -165,17 +165,8 @@ export const GamesView: React.FC<GamesViewProps> = ({
     if(!canIndicateGame(game.id)){setUpgradeOpen(true);return;}
     if (!referralCode) { onShowToast('Seu link de indicação ainda não está disponível.', 'info'); return; }
     const normalizedGame = normalizeGameId(game.id);
-    const gameDomain = normalizedGame === 'raspa-fortuna'
-      ? 'https://raspadinhaadasorte.site'
-      : normalizedGame === 'gen-dino'
-        ? 'https://dinopay.site'
-        : normalizedGame === 'blockwin'
-          ? 'https://blockwinner.site'
-          : normalizedGame === 'subwaypay'
-            ? 'https://joguesubway.surf'
-            : normalizedGame === 'bubbleblast'
-              ? 'https://jogarbubble.online'
-              : window.location.origin;
+    const gameDomain = GAME_DOMAINS[normalizedGame];
+    if (!gameDomain) { onShowToast('Este jogo ainda não tem domínio configurado.', 'info'); return; }
     const gameReferralUrl = `${gameDomain}/api/referrals/game-visit?ref=${encodeURIComponent(referralCode)}&game=${encodeURIComponent(normalizedGame)}`;
     try {
       if (navigator.clipboard && window.isSecureContext) {
@@ -253,10 +244,10 @@ export const GamesView: React.FC<GamesViewProps> = ({
 
   const launchGame = (game: GameCatalogItem) => {
     const normalizedId = normalizeGameId(game.id);
-    setSelectedGameId(normalizedId);
-    if (normalizedId) {
-      setTrackedGame(normalizedId, 'lobby_launch_click');
-    }
+    const domain = GAME_DOMAINS[normalizedId];
+    if (!domain) { onShowToast('Este jogo ainda não tem domínio configurado.', 'info'); return; }
+    setTrackedGame(normalizedId, 'lobby_launch_click');
+    window.location.assign(domain);
   };
 
   // If a game is explicitly selected by clicking "JOGAR", show that specific game view with a Back button
