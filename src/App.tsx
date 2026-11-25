@@ -552,45 +552,43 @@ function AppContent({onGameModeChange}:{onGameModeChange:(value:boolean)=>void})
     initAuth();return()=>{active=false;controller.abort();};
   }, [token,authRestoreAttempt]);
 
-  // Real-time Polling Interval for instant balance, transactions and affiliate sales updates
+  // Refresh account data only while the Hub is visible. Resume after the current request finishes.
   useEffect(() => {
     if (!token) {
       knownTxIdsRef.current = null;
       knownCommissionIdsRef.current = null;
       return;
     }
-
-    // Never poll platform affiliate/finance data if user is in a direct full-screen game context
-    if (appContext === 'gen-dino' || appContext === 'subwaypay' || appContext === 'bubbleblast' || appContext === 'raspa-fortuna') {
-      return;
-    }
-
-    let isMounted = true;
-    let inFlightOverview = false;
-    let inFlightAffiliate = false;
-
-    const poll = () => {
-      if (typeof document !== 'undefined' && document.hidden) return;
-      if (!isMounted) return;
-
-      if (!inFlightOverview) {
-        inFlightOverview = true;
-        fetchOverview(token).finally(() => { inFlightOverview = false; });
-      }
-
-      if (!inFlightAffiliate) {
-        inFlightAffiliate = true;
-        fetchAffiliateInfo(token).finally(() => { inFlightAffiliate = false; });
+    if (appContext !== 'alliance-hub' || authLoading || authRestoreError || !user?.id) return;
+    let stopped = false;
+    let running = false;
+    let lastRefresh = Date.now();
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const schedule = () => {
+      clearTimeout(timer);
+      if (stopped || document.hidden || running) return;
+      timer = setTimeout(refresh, Math.max(0, 30000 - (Date.now() - lastRefresh)));
+    };
+    const refresh = async () => {
+      if (stopped || document.hidden || running) return;
+      running = true;
+      try {
+        await fetchOverview(token);
+        if (!stopped && !document.hidden) await fetchAffiliateInfo(token);
+      } finally {
+        running = false;
+        lastRefresh = Date.now();
+        schedule();
       }
     };
-
-    const pollInterval = setInterval(poll, 7000);
-
+    document.addEventListener('visibilitychange', schedule);
+    schedule();
     return () => {
-      isMounted = false;
-      clearInterval(pollInterval);
+      stopped = true;
+      clearTimeout(timer);
+      document.removeEventListener('visibilitychange', schedule);
     };
-  }, [token, appContext]);
+  }, [token, appContext, authLoading, authRestoreError, user?.id]);
 
   // Fetch Finance Data (with Real-Time Affiliate Sale Detection & PWA Notification)
   const fetchOverview = async (authToken: string) => {
