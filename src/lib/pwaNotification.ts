@@ -121,6 +121,8 @@ function urlBase64ToUint8Array(base64String: string) {
 }
 
 // Subscribe to Backend Web Push (Required for iOS / Android when app is CLOSED)
+const pushSync = new Map<string,{startedAt:number;request:Promise<void>}>();
+
 export async function subscribeToWebPush(swReg: ServiceWorkerRegistration) {
   try {
     if (!('pushManager' in swReg)) {
@@ -178,19 +180,24 @@ export async function subscribeToWebPush(swReg: ServiceWorkerRegistration) {
 
       // Send subscription to backend server
       const token = localStorage.getItem('pg_auth_token') || localStorage.getItem('paygateway_token') || localStorage.getItem('token');
-      const subscribeResponse = await fetch('/api/push/subscribe', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {})
-        },
-        body: JSON.stringify({ subscription })
-      });
-      if (!subscribeResponse.ok) {
-        const detail = await subscribeResponse.text().catch(() => '');
-        console.warn(`[WebPush] Falha ao persistir inscrição Push (${subscribeResponse.status}): ${detail}`);
+      const payload = JSON.stringify({ subscription });
+      const signature = JSON.stringify([token, payload]);
+      const prior = pushSync.get(signature);
+      if (prior && Date.now() - prior.startedAt < 600000) {
+        await prior.request;
       } else {
-        console.log('[WebPush] Inscrição Web Push enviada e sincronizada com o backend!');
+        const request = fetch('/api/push/subscribe', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {})},
+          body: payload
+        }).then(response => {
+          if (!response.ok) throw new Error(`Push sync: HTTP ${response.status}`);
+        });
+        const entry = { startedAt: Date.now(), request };
+        pushSync.clear();
+        pushSync.set(signature, entry);
+        try { await request; }
+        catch (error) { if (pushSync.get(signature) === entry) pushSync.delete(signature); throw error; }
       }
     }
 
