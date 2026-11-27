@@ -151,7 +151,7 @@ function openResult() {
 async function finish(outcome) {
   const coinsNow = Math.max(0, Number(getCoins ? getCoins() : (engine?.stats?.coins || 0)) || 0);
   const isTargetCompleted = reachedTarget(round.entry, raceCoinValue(coinsNow, influencerCoinRate));
-  if (finished || (outcome === 'cashout' && !cashoutUnlocked && !isTargetCompleted)) return;
+  if (finished || (outcome === 'cashout' && !isTargetCompleted)) return;
   const stored = read('subway-demo-round', null);
   if (!stored || stored.id !== round.id || stored.status !== 'active') return;
   const currUsers = read('subway-demo-users', []);
@@ -404,14 +404,10 @@ setInterval(() => {
   const value = raceCoinValue(coins, influencerCoinRate);
   if (hudValue) { const displayValue = money(value); if (hudValue.textContent !== displayValue) hudValue.textContent = displayValue; }
   if (hudScore) hudScore.textContent = Math.max(0, Math.floor(Number(gameInst?.stats?.score) || 0)).toString().padStart(6, '0');
-  cashoutUnlocked = typeof SubwayRound !== 'undefined' ? SubwayRound.canCashout(round.entry, coins) : (coins >= 10);
+  cashoutUnlocked = reachedTarget(round.entry, value);
   if (cash) {
     cash.hidden = !cashoutUnlocked;
     cash.disabled = !cashoutUnlocked;
-    if (cashoutUnlocked) {
-      const span = cash.querySelector('span');
-      if (span) span.textContent = 'Confirmar resultado';
-    }
   }
   if (note) {
     note.hidden = cashoutUnlocked;
@@ -419,9 +415,6 @@ setInterval(() => {
       const minM = getSubwayCashoutMultiplier();
       note.textContent = 'Continue coletando moedas para liberar a confirmação do resultado.';
     }
-  }
-  if (reachedTarget(round.entry, value)) {
-    finish('cashout');
   }
 }, 120);
 

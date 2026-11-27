@@ -104,6 +104,8 @@
 
 <body>
 
+<style>.game-tools #cashout[hidden]{display:none}</style>
+<div class="game-tools"><button type="button" id="cashout" hidden disabled><i data-lucide="banknote" aria-hidden="true"></i><span>Cashout</span></button></div>
 <div class="run-hud" id="run-hud" aria-label="Informações da corrida"><div class="run-hud-card run-hud-meta"><small>Meta da corrida · 5×</small><strong id="hud-target">—</strong></div><div class="run-hud-card run-hud-total"><small>Moedas da corrida</small><strong id="hud-value">R$ 0,00</strong></div><strong class="run-hud-score" id="hud-score">000000</strong></div>
 <dialog id="result"><img src="assets/preload/splash.png" alt="Subway Surfers"><div class="result-icon"><i id="result-icon" data-lucide="trophy"></i></div><h2 id="result-title"></h2><strong id="result-value"></strong><p id="result-detail"></p><button id="result-retry">Jogar novamente</button><button id="result-home" class="secondary">Voltar ao painel</button><small>Subway Pay Oficial · Corrida Valendo</small></dialog><dialog id="leave-dialog"><h2>Sair da corrida?</h2><p>Sair encerra a partida e solicita a confirmação do resultado. O contador de moedas acompanha o progresso. O resultado financeiro é confirmado pelo servidor.</p><button id="stay">Continuar jogando</button><button id="confirm-leave" class="secondary">Encerrar corrida</button></dialog><script>const aposta=1;localStorage.setItem('realBetPage','true');</script>
     <script>
@@ -119,7 +121,7 @@
         <h1 class="dot two">.</h1>
         <h1 class="dot three">.</h1>
     </div>
-    <script src="../lucide.min.js"></script><script src="../round.js?v=load17"></script><script src="bridge.js?v=load22"></script><script src="js/loading.js"></script>
+    <script src="../lucide.min.js"></script><script src="../round.js?v=load17"></script><script src="bridge.js?v=load23"></script><script src="js/loading.js"></script>
     <script src="js/boot.js?v=load17"></script>
     
 
