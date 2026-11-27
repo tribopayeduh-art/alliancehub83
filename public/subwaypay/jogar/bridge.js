@@ -170,11 +170,9 @@ async function finish(outcome) {
   const detail = document.querySelector('#result-detail');
   const amount = document.querySelector('#result-value');
   const retry = document.querySelector('#result-retry');
-  if (title) title.textContent = 'Confirmando resultado…';
-  if (detail) detail.textContent = 'Aguarde a confirmação da corrida.';
-  if (amount) amount.textContent = '';
-  if (retry) retry.hidden = true;
-  openResult();
+  // Keep the race visible until there is a final result to show.
+  if (cash) cash.disabled = true;
+  if (retry) retry.disabled = true;
   try{
     const token=localStorage.getItem('pg_auth_token')||localStorage.getItem('paygateway_token')||localStorage.getItem('token');
     const response=await fetch('/api/game/subway-pay/settle',{method:'POST',headers:{'Content-Type':'application/json',...(token?{Authorization:'Bearer '+token}:{})},signal:AbortSignal.timeout(15000),body:JSON.stringify({betId:stored.betId||stored.id,outcome,coins})});
@@ -187,7 +185,8 @@ async function finish(outcome) {
     finished=false;
     if (title) title.textContent = 'Resultado não confirmado';
     if (detail) detail.textContent = 'Não foi possível confirmar a corrida. Tente novamente.';
-    if (retry) { retry.hidden = false; retry.textContent = 'Tentar confirmar novamente'; retry.onclick = () => finish(outcome); }
+    if (amount) amount.textContent = '';
+    if (retry) { retry.disabled = false; retry.hidden = false; retry.textContent = 'Tentar confirmar novamente'; retry.onclick = () => finish(outcome); }
     openResult();
     return;
   }
@@ -205,6 +204,7 @@ async function finish(outcome) {
 
   const retryBtn = document.querySelector('#result-retry');
   if (retryBtn) {
+    retryBtn.disabled = false;
     retryBtn.hidden = false;
     retryBtn.textContent = 'Jogar novamente';
     retryBtn.onclick = null;
