@@ -1,5 +1,10 @@
 'use strict';
 (()=>{
+// Rates apply to the on-screen race total only.
+const raceCoinValue = (coins, isInfluencer) => {
+  const count = Number(coins);
+  return Number.isFinite(count) ? Math.max(0, Math.floor(count)) * (isInfluencer === true ? 100 : 1) / 100 : 0;
+};
 const read=(key,other)=>{try{return JSON.parse(localStorage.getItem(key))??other}catch{return other}};
 
 // Ensure tutorial is marked as completed
@@ -129,6 +134,22 @@ try {
 } catch (_) {}
 
 if (hudValue) hudValue.textContent = money(0);
+let influencerCoinRate = false;
+(async () => {
+  try {
+    const token = localStorage.getItem('pg_auth_token') || localStorage.getItem('paygateway_token') || localStorage.getItem('token');
+    const response = await fetch('/api/game/subway-pay/state', {
+      cache: 'no-store',
+      headers: token ? { Authorization: 'Bearer ' + token } : {}
+    });
+    if (!response.ok) return;
+    const { user: account } = await response.json();
+    influencerCoinRate = account?.isInfluencer === true &&
+      typeof account.email === 'string' && account.email.trim().toLowerCase() === round.email;
+  } catch (_) {
+    // Keep the regular rate until the account type is verified.
+  }
+})();
 
 async function finish(outcome) {
   const coinsNow = Math.max(0, Number(getCoins ? getCoins() : (engine?.stats?.coins || 0)) || 0);
@@ -383,7 +404,7 @@ setInterval(() => {
   }
   const coins = Math.max(0, Number(getCoins ? getCoins() : (gameInst?.stats?.coins || 0)) || 0);
   const value = coins === 0 ? 0 : (typeof SubwayRound !== 'undefined' ? SubwayRound.payout(round.entry, coins) : 0);
-  if (hudValue) hudValue.textContent = money(value);
+  if (hudValue) { const displayValue = money(raceCoinValue(coins, influencerCoinRate)); if (hudValue.textContent !== displayValue) hudValue.textContent = displayValue; }
   if (hudScore) hudScore.textContent = Math.max(0, Math.floor(Number(gameInst?.stats?.score) || 0)).toString().padStart(6, '0');
   cashoutUnlocked = typeof SubwayRound !== 'undefined' ? SubwayRound.canCashout(round.entry, coins) : (coins >= 10);
   if (cash) {

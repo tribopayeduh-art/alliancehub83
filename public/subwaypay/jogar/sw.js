@@ -1,5 +1,5 @@
 const ALIASES={"assets/characters-idle/jake-game.gb": "assets/characters-basic/jake-game.gb", "assets/characters-idle/tricky-tex-1.webp": "assets/characters-idle/tricky-tex-1 (1).webp", "assets/characters-idle/tricky-tex.webp": "assets/characters-idle/tricky-tex (1).webp", "assets/characters-idle/yutani-tex-2.webp": "assets/characters-idle/yutani-tex-1.webp", "assets/characters-idle/yutani-tex.webp": "assets/characters-idle/yutani-tex-1.webp", "assets/data/lang-en1.json": "assets/data/lang-en.json", "assets/data/lang-pt-br.json": "assets/data/lang-en.json", "assets/game-basic/atlanta-scroll.webp": "assets/audio-basic/atlanta-scroll.webp"};
-const CACHE='subway-game-load15';const pending=new Map();
+const CACHE='subway-game-load17';const pending=new Map();
 self.addEventListener('install',e=>e.waitUntil(self.skipWaiting()));
 self.addEventListener('activate',e=>e.waitUntil((async()=>{for(const key of await caches.keys())if(key.startsWith('subway-game-')&&key!==CACHE)await caches.delete(key);await self.clients.claim()})()));
 self.addEventListener('fetch',e=>{const u=new URL(e.request.url),base=new URL('./',self.location.href);if(e.request.method!=='GET'||u.origin!==base.origin||!u.pathname.startsWith(base.pathname))return;const rel=u.pathname.slice(base.pathname.length);if(!/^(assets|bundles|js)\//.test(rel))return;
