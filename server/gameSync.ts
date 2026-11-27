@@ -35,6 +35,14 @@ export async function settleSubway(db:any,user:UserDB|null,body:any){
  player(user);
  const bet=typeof body.betId==='string'?await db.getGameBetById(body.betId):null;
  if(!bet||bet.userId!==user.id||bet.gameId!=='g_subway_pay')throw failure('Rodada não encontrada.',404);
+ if(body.outcome==='offer'){
+  const payout=bet.status==='active'?await db.getSubwayAuthorizedPrize(bet.id,user.id):0;
+  return {success:true,payout};
+ }
+ if(body.outcome==='cashout'){
+  const payout=bet.status==='active'?await db.getSubwayAuthorizedPrize(bet.id,user.id):Number(bet.payoutAmount||0);
+  if(!(payout>0))throw failure('Esta rodada não tem prêmio disponível para saque.',409);
+ }
  const balance=await db.settleGameBetAtomic(bet.id,user.id,0,'cashed_out','SubwayPay','g_subway_pay');
  const settled=await db.getGameBetById(bet.id),payout=Number(settled.payoutAmount||0);
  return {success:true,outcome:payout>0?'cashout':'loss',payout,multiplier:payout/bet.betAmount,balance,financialModel:'server-authoritative'};

@@ -1981,6 +1981,14 @@ export class DatabaseService {
     }
   }
 
+  async getSubwayAuthorizedPrize(betId: string, userId: string): Promise<number> {
+    const authority = (await getDoc(doc(documentDb, 'roundAuthorities', betId))).data();
+    if (!authority || authority.userId !== userId || authority.gameId !== 'g_subway_pay') {
+      throw Object.assign(new Error('Rodada sem resultado autorizado.'), {status:409});
+    }
+    return authority.prizeCents / 100;
+  }
+
   async getGameBetById(id: string): Promise<GameBetDB | null> {
     try {
       const snap = await getDoc(doc(documentDb, 'gameBets', id));

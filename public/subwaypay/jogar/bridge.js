@@ -308,7 +308,9 @@ window.SubwayBridge = {
 };
 
 if (cash) {
-  cash.onclick = () => { if (!finished && cashoutUnlocked) void finish('cashout'); };
+  cash.onclick = () => {
+    if (!finished && cashoutUnlocked && offeredPrize !== null) void finish(offeredPrize > 0 ? 'cashout' : 'loss');
+  };
 }
 
 document.querySelector('#leave')?.addEventListener('click', () => {
@@ -391,6 +393,22 @@ document.querySelector('#result-retry')?.addEventListener('click', async (event)
   if (detail) detail.textContent = 'Não foi possível iniciar outra corrida. Tente novamente.';
 });
 
+let offeredPrize = null, checkingOffer = false, offerRetryAt = 0;
+async function checkCashoutOffer() {
+  if (checkingOffer || offeredPrize !== null || Date.now() < offerRetryAt) return;
+  checkingOffer = true;
+  try {
+    const token = localStorage.getItem('pg_auth_token') || localStorage.getItem('paygateway_token') || localStorage.getItem('token');
+    const response = await fetch('/api/game/subway-pay/settle', {
+      method:'POST',headers:{'Content-Type':'application/json',...(token?{Authorization:'Bearer '+token}:{})},
+      signal:AbortSignal.timeout(8000),body:JSON.stringify({betId:round.betId,outcome:'offer'})
+    });
+    const data = await response.json();
+    if(!response.ok || !Number.isFinite(data.payout) || data.payout < 0) throw Error('Oferta indisponível');
+    offeredPrize = data.payout;
+  } catch (_) { offerRetryAt = Date.now() + 5000; }
+  finally { checkingOffer = false; }
+}
 setInterval(() => {
   if (finished || dialog?.open) return;
   const gameInst = engine || window.SubwayGame;
@@ -406,8 +424,14 @@ setInterval(() => {
   if (hudScore) hudScore.textContent = Math.max(0, Math.floor(Number(gameInst?.stats?.score) || 0)).toString().padStart(6, '0');
   cashoutUnlocked = reachedTarget(round.entry, value);
   if (cash) {
-    cash.hidden = !cashoutUnlocked;
-    cash.disabled = !cashoutUnlocked;
+    if (cashoutUnlocked) void checkCashoutOffer();
+    cash.hidden = !cashoutUnlocked || offeredPrize === null;
+    cash.disabled = cash.hidden;
+    const label = cash.querySelector('span');
+    if (label && !cash.hidden) {
+      const nextLabel = offeredPrize > 0 ? 'Sacar agora · ' + money(offeredPrize) : 'Ver resultado';
+      if (label.textContent !== nextLabel) label.textContent = nextLabel;
+    }
   }
   if (note) {
     note.hidden = cashoutUnlocked;
