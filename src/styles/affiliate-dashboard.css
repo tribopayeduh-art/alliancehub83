@@ -8,3 +8,12 @@ body.inex-affiliate-dashboard-open .alliance-main-content{background:#f7f8fa}bod
 @media(prefers-reduced-motion:reduce){.af-dashboard *{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
 
 .af-dashboard .afd-mobile-back{display:none}.afd-sidebar{height:100dvh}.afd-mobile-nav{overscroll-behavior-x:contain}@media(max-width:850px){.af-dashboard .afd-mobile-back{display:inline-flex}}
+
+/* Affiliate network workspace */
+.afd-heading.afd-heading-operations{display:flex;align-items:flex-start;gap:16px;min-width:0}
+.afd-operations-mark{display:grid;place-items:center;flex:0 0 48px;height:48px;border:1px solid #e1e6ee;border-radius:14px;background:#f2f5fa;color:#384d6b}
+.afd-operations-copy{min-width:0}
+.afd-operations-copy>p{margin:0 0 5px;color:#526176;font-size:11px;font-weight:650}
+.afd-operations-copy h1{margin:0;line-height:1.18}
+.afd-operations-copy>span{display:block;max-width:56ch;margin-top:7px;color:#526176;font-size:13px;line-height:1.55}
+@media(max-width:600px){.afd-heading.afd-heading-operations{gap:12px}.afd-operations-mark{flex-basis:40px;height:40px;border-radius:11px}.afd-operations-mark svg{width:19px;height:19px}.afd-operations-copy>span{font-size:12px}}
