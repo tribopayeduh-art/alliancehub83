@@ -151,6 +151,12 @@ let influencerCoinRate = false;
   }
 })();
 
+function openResult() {
+  if (!dialog || dialog.open) return;
+  try { dialog.showModal(); }
+  catch (_) { dialog.setAttribute('open', ''); }
+}
+
 async function finish(outcome) {
   const coinsNow = Math.max(0, Number(getCoins ? getCoins() : (engine?.stats?.coins || 0)) || 0);
   const isTargetCompleted = coinsNow >= 80 || (typeof SubwayRound !== 'undefined' && SubwayRound.payout(round.entry, coinsNow) >= round.entry * 5.0);
@@ -160,19 +166,31 @@ async function finish(outcome) {
   const currUsers = read('subway-demo-users', []);
   const gameInst = engine || window.SubwayGame;
   const coins = Math.max(0, Math.floor(Number(getCoins ? getCoins() : (gameInst?.stats?.coins || 0)) || 0));
-  finished=true;gameInst?.pause?.();
+  finished = true;
+  try { gameInst?.pause?.(); } catch (error) { console.warn('Subway pause:', error); }
+  const title = document.querySelector('#result-title');
+  const detail = document.querySelector('#result-detail');
+  const amount = document.querySelector('#result-value');
+  const retry = document.querySelector('#result-retry');
+  if (title) title.textContent = 'Confirmando resultado…';
+  if (detail) detail.textContent = 'Aguarde a confirmação da corrida.';
+  if (amount) amount.textContent = '';
+  if (retry) retry.hidden = true;
+  openResult();
   try{
     const token=localStorage.getItem('pg_auth_token')||localStorage.getItem('paygateway_token')||localStorage.getItem('token');
-    const response=await fetch('/api/game/subway-pay/settle',{method:'POST',headers:{'Content-Type':'application/json',...(token?{Authorization:'Bearer '+token}:{})},body:JSON.stringify({betId:stored.betId||stored.id,outcome,coins})});
+    const response=await fetch('/api/game/subway-pay/settle',{method:'POST',headers:{'Content-Type':'application/json',...(token?{Authorization:'Bearer '+token}:{})},signal:AbortSignal.timeout(15000),body:JSON.stringify({betId:stored.betId||stored.id,outcome,coins})});
     const data=await response.json();if(!response.ok||typeof data.balance!=='number')throw new Error(data.error||'Resultado não confirmado.');
-    if(typeof SubwayRound!=='undefined')SubwayRound.settle(stored,currUsers,outcome,coins);
-    round={...stored,payout:data.payout,status:data.outcome};outcome=data.outcome;
+    round={...stored,payout:data.payout,status:data.outcome};outcome=data.outcome === 'cashout' && isTargetCompleted ? 'win' : data.outcome;
     const u=currUsers.find(x=>x.email===round.email);if(u)u.balance=data.balance;
-    localStorage.setItem('subway-demo-users',JSON.stringify(currUsers));localStorage.setItem('subway-demo-round',JSON.stringify(round));
+    try { localStorage.setItem('subway-demo-users',JSON.stringify(currUsers)); localStorage.setItem('subway-demo-round',JSON.stringify(round)); } catch (_) {}
     if(window.parent&&window.parent!==window)window.parent.postMessage({source:'subway-pay-shell',event:'balance',balance:data.balance,outcome,round},location.origin);
   }catch(error){
     finished=false;
-    if(note){note.hidden=false;note.textContent=(error.message||'Não foi possível confirmar a rodada.')+' Tente confirmar novamente.';}
+    if (title) title.textContent = 'Resultado não confirmado';
+    if (detail) detail.textContent = 'Não foi possível confirmar a corrida. Tente novamente.';
+    if (retry) { retry.hidden = false; retry.textContent = 'Tentar confirmar novamente'; retry.onclick = () => finish(outcome); }
+    openResult();
     return;
   }
 
@@ -189,6 +207,9 @@ async function finish(outcome) {
 
   const retryBtn = document.querySelector('#result-retry');
   if (retryBtn) {
+    retryBtn.hidden = false;
+    retryBtn.textContent = 'Jogar novamente';
+    retryBtn.onclick = null;
     const activeU = currUsers.find(u => u.email === round.email);
     if (!activeU || activeU.balance < round.entry || activeU.balance <= 0) {
       retryBtn.innerHTML = '<i data-lucide="wallet"></i> Depositar agora';
@@ -200,9 +221,7 @@ async function finish(outcome) {
     }
   }
 
-  if (dialog && typeof dialog.showModal === 'function') {
-    dialog.showModal();
-  }
+  openResult();
   if (window.lucide) lucide.createIcons();
   document.querySelector('#result-home')?.focus();
 }
@@ -394,7 +413,7 @@ document.querySelector('#result-retry')?.addEventListener('click', async () => {
 });
 
 setInterval(() => {
-  if (finished) return;
+  if (finished || dialog?.open) return;
   const gameInst = engine || window.SubwayGame;
   if (!engine && gameInst) {
     engine = gameInst;
