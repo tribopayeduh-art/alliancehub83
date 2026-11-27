@@ -64,7 +64,8 @@ const standardGames:Record<string,string>={g_gen_dino:'g_gen_dino','gen-dino':'g
 export async function startStandardGame(db:any,user:UserDB|null,game:string,body:any,key?:string){
  player(user);const gameId=standardGames[game];if(!gameId)throw failure('Jogo não encontrado.',404);
  const config=await db.getGameConfig(gameId),amount=Number(body.betAmount);
- if(!Number.isFinite(amount)||amount<=0||amount<(config.minBet??1)||amount>(config.maxBet??500))throw failure('Entrada fora dos limites do jogo.');
+ if(config.status==='inactive'||config.maintenance)throw failure('O jogo está em manutenção.');
+ if(!Number.isFinite(amount)||!Number.isSafeInteger(Math.round(amount*100))||Math.abs(amount*100-Math.round(amount*100))>1e-7||amount<=0||amount<(config.minBet??1)||amount>(config.maxBet??500))throw failure('Entrada fora dos limites do jogo.');
  const id=betId(gameId,user.id,key);
  const balance=await db.startGameBetAtomic({id,userId:user.id,gameId,betAmount:amount,payoutAmount:0,multiplier:1,status:'active',difficulty:config.difficulty||'medium',createdAt:new Date().toISOString()} as GameBetDB,gameId);
  return {success:true,betId:id,balance};

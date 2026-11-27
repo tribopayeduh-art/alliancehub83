@@ -111,11 +111,9 @@ function getSubwayCashoutMultiplier() {
   return Number(cfg.minCashoutMultiplier) || 1.5;
 }
 function syncSubwayHud() {
-  const targetM = getSubwayTargetMultiplier();
-  const cashoutM = getSubwayCashoutMultiplier();
-  if (hudTarget) hudTarget.textContent = money(round.entry * targetM);
+  if (hudTarget) hudTarget.textContent = '80 moedas';
   if (note && !cashoutUnlocked) {
-    note.textContent = 'Cashout libera ao atingir ' + cashoutM + 'x (' + money(round.entry * cashoutM) + '). Meta de 5x (' + money(round.entry * targetM) + ').';
+    note.textContent = 'Continue coletando moedas para liberar a confirmação do resultado.';
   }
 }
 syncSubwayHud();
@@ -202,7 +200,7 @@ async function finish(outcome) {
   const resDet = document.querySelector('#result-detail');
   if (resTitle) resTitle.textContent = outcome === 'loss' ? 'Você perdeu' : outcome === 'win' ? 'Você ganhou!' : 'Cashout realizado!';
   if (resIcon) resIcon.setAttribute('data-lucide', outcome === 'loss' ? 'heart-crack' : 'trophy');
-  if (resVal) resVal.textContent = outcome === 'loss' ? ('-' + money(round.entry)) : money(round.payout || round.entry);
+  if (resVal) resVal.textContent = outcome === 'loss' ? ('-' + money(round.entry)) : money(round.payout ?? 0);
   if (resDet) resDet.textContent = outcome === 'loss' ? 'A corrida terminou. Sua entrada foi consumida do saldo.' : 'Parabéns! Valor creditado instantaneamente no seu saldo.';
 
   const retryBtn = document.querySelector('#result-retry');
@@ -278,7 +276,7 @@ window.SubwayBridge = {
     if (note) {
       const minM = getSubwayCashoutMultiplier();
       const targetM = getSubwayTargetMultiplier();
-      note.textContent = 'Cashout libera em ' + minM + 'x (' + money(round.entry * minM) + '). Meta 5x (' + money(round.entry * targetM) + ').';
+      note.textContent = 'Continue coletando moedas para liberar a confirmação do resultado.';
     }
   },
   lose() {
@@ -308,7 +306,7 @@ window.SubwayBridge = {
             note.style.fontWeight = '';
             const minM = getSubwayCashoutMultiplier();
             const targetM = getSubwayTargetMultiplier();
-            note.textContent = 'Cashout libera em ' + minM + 'x (' + money(round.entry * minM) + '). Meta 5x (' + money(round.entry * targetM) + ').';
+            note.textContent = 'Continue coletando moedas para liberar a confirmação do resultado.';
           }
         }, 2200);
       }
@@ -398,19 +396,8 @@ document.querySelector('#result-retry')?.addEventListener('click', async (event)
     }
   } catch (_) {}
 
-  // Fallback offline deduction
-  activeU.balance = Math.round((activeU.balance - entryVal) * 100) / 100;
-  localStorage.setItem('subway-demo-users', JSON.stringify(currUsers));
-  const newRound = {
-    id: (typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : 'rnd_' + Date.now()),
-    email: sessionEmail,
-    entry: entryVal,
-    status: 'active'
-  };
-  localStorage.setItem('subway-demo-round', JSON.stringify(newRound));
-  const qParams = new URLSearchParams(window.location.search);
-  qParams.set('balance', String(activeU.balance));
-  window.location.search = qParams.toString();
+  const detail = document.querySelector('#result-detail');
+  if (detail) detail.textContent = 'Não foi possível iniciar outra corrida. Tente novamente.';
 });
 
 setInterval(() => {
@@ -432,7 +419,7 @@ setInterval(() => {
     cash.disabled = !cashoutUnlocked;
     if (cashoutUnlocked) {
       const span = cash.querySelector('span');
-      if (span) span.textContent = 'Cashout · ' + money(value);
+      if (span) span.textContent = 'Confirmar resultado';
     }
   }
   if (note) {
@@ -440,7 +427,7 @@ setInterval(() => {
     if (!cashoutUnlocked) {
       const minM = getSubwayCashoutMultiplier();
       const targetM = getSubwayTargetMultiplier();
-      note.textContent = 'Cashout libera em ' + minM + 'x (' + money(round.entry * minM) + '). Meta de 5x (' + money(round.entry * targetM) + ').';
+      note.textContent = 'Continue coletando moedas para liberar a confirmação do resultado.';
     }
   }
   // Auto-cashout triggers ONLY when completing 5x the bet amount (80 coins or value >= entry * 5.0)
