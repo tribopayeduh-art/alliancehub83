@@ -1,0 +1,68 @@
+{
+  "url": "https://subwaypay.site/games/subway/presell",
+  "final_url": "https://subwaypay.site/games/subway/presell",
+  "generated_at": "2026-11-27 19:13:54",
+  "files": 29,
+  "total_bytes": 11790049,
+  "total_mb": 11.24,
+  "rewrites": {
+    "scripts_undeferred": 0,
+    "imgs_unlazied": 0,
+    "urls_localized": 15,
+    "integrity_removed": 0,
+    "links_absolutized": 0,
+    "trackers_async": 0,
+    "hints_removed": 0,
+    "videos_placeholder": 0,
+    "css_files_rewritten": 4,
+    "dead_fontface_dropped": 0,
+    "runtime_assets": 0
+  },
+  "verification": {
+    "checked": 32,
+    "missing": []
+  },
+  "kept_external_hosts": [],
+  "dead_hosts": [],
+  "failures": {
+    "https://subwaypay.site/assets/subway-model/igaming-premium.css?v=1": {
+      "reason": "HTTP 404",
+      "referenced_in": ""
+    },
+    "https://subwaypay.site/storage/background_banner.png": {
+      "reason": "HTTP 403",
+      "referenced_in": ""
+    }
+  },
+  "failure_count": 2,
+  "windows_path_renames": {},
+  "windows_path_renames_count": 0,
+  "spa_freeze": {},
+  "rastreadores": "removidos",
+  "remover_rastreadores": true,
+  "trackers_removed": {
+    "scripts_externos": [],
+    "inline": 1,
+    "iframes": 0,
+    "pixels": 0,
+    "noscript": 0
+  },
+  "external_scripts_removed": [],
+  "assets_via_captura_externa": 0,
+  "dedupe_removed": [],
+  "spa_freeze_applied": false,
+  "auto_mode": true,
+  "auto_decision": {
+    "spa": false,
+    "framework": "pagina estatica/server-rendered",
+    "motivo": "877 chars de texto visivel ja no HTML original, sem marcadores de framework SPA",
+    "texto_html": 877,
+    "texto_render": 803
+  },
+  "offline_quality": {
+    "texto_inicial": 812,
+    "texto_final": 812,
+    "estavel": true,
+    "ok": true
+  }
+}

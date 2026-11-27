@@ -1,0 +1,465 @@
+/* Subway Money — Designer System v4
+   Camada final visual. Carregada por ultimo para unificar paginas antigas e novas. */
+:root{
+  --d4-bg:#0b0e0c;
+  --d4-bg-2:#101411;
+  --d4-surface:#151a17;
+  --d4-surface-2:#1b211d;
+  --d4-surface-3:#232b26;
+  --d4-border:#2d3931;
+  --d4-border-soft:rgba(255,255,255,.075);
+  --d4-text:#f7f8f7;
+  --d4-muted:#9ca69f;
+  --d4-muted-2:#6f7972;
+  --d4-green:#19d85a;
+  --d4-green-hi:#2be76d;
+  --d4-green-dark:#0c9f43;
+  --d4-green-deep:#087a34;
+  --d4-green-soft:rgba(25,216,90,.12);
+  --d4-danger:#ff6868;
+  --d4-warning:#7eb9ff;
+  --d4-radius-sm:8px;
+  --d4-radius:14px;
+  --d4-radius-lg:18px;
+  --d4-shadow:0 18px 48px rgba(0,0,0,.32);
+  --ig-yellow:var(--d4-green)!important;
+  --ig-yellow2:var(--d4-green-dark)!important;
+  --ig-green:var(--d4-green)!important;
+  --sm-yellow:var(--d4-green)!important;
+  --sm-green:var(--d4-green-dark)!important;
+  --sm-green2:var(--d4-green-hi)!important;
+}
+
+html{background:var(--d4-bg)!important;color-scheme:dark;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html,body{width:100%!important;max-width:100%!important;min-width:0!important;overflow-x:hidden!important}
+body{margin:0!important;background:linear-gradient(180deg,#0a0d0b 0%,#0d120f 52%,#0a0b0a 100%)!important;color:var(--d4-text)!important;font-family:Inter,Arial,sans-serif!important}
+*,*::before,*::after{box-sizing:border-box!important}
+img,picture,video,svg,canvas,iframe{max-width:100%!important;height:auto}
+a,button,input,select,textarea{font:inherit;max-width:100%}
+button,a{-webkit-tap-highlight-color:transparent}
+::selection{background:rgba(25,216,90,.28);color:#fff}
+
+/* ===== HEADER / NAV ===== */
+html body .sub-top-bonus,
+html body .sub-client-topbar{
+  min-height:34px!important;height:auto!important;
+  padding:6px 12px!important;
+  background:linear-gradient(90deg,#0b6f31,#109c43)!important;
+  border-bottom:1px solid rgba(255,255,255,.09)!important;
+  color:#fff!important;
+  font-size:11px!important;font-weight:750!important;
+  gap:9px!important;
+}
+html body .sub-top-bonus .sub-bonus-btn,
+html body .sub-client-topbar .sub-bonus-btn{
+  min-height:26px!important;padding:5px 10px!important;
+  background:#fff!important;color:#075a28!important;-webkit-text-fill-color:#075a28!important;
+  border:0!important;border-radius:7px!important;box-shadow:none!important;
+  font-size:10px!important;font-weight:900!important;
+}
+html body .sub-nav,
+html body .sub-client-nav{
+  background:rgba(11,14,12,.97)!important;
+  border-bottom:1px solid var(--d4-border)!important;
+  backdrop-filter:blur(14px)!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.18)!important;
+}
+html body .sub-nav-inner,
+html body .sub-client-nav-inner{
+  width:min(100%,1180px)!important;max-width:1180px!important;
+  min-height:60px!important;margin:0 auto!important;padding:9px 14px!important;
+  gap:10px!important;min-width:0!important;
+}
+html body .sub-logo-img,
+html body .sub-client-logo img{max-height:34px!important;width:auto!important;object-fit:contain!important}
+html body .sub-client-flow-copy strong{color:#fff!important}
+html body .sub-client-flow-copy span{color:var(--d4-muted)!important}
+html body .sub-client-flow-mini{
+  border-color:rgba(25,216,90,.22)!important;
+  background:rgba(25,216,90,.06)!important;
+}
+html body .sub-client-flow-mini b:first-child{color:var(--d4-green)!important}
+html body .sub-client-link{
+  min-height:38px!important;padding:9px 11px!important;border-radius:9px!important;
+  color:#dce2de!important;background:transparent!important;border:1px solid transparent!important;
+  font-size:12px!important;font-weight:800!important;
+}
+html body .sub-client-link:hover,
+html body .sub-client-link.w--current{
+  background:var(--d4-surface-2)!important;border-color:rgba(25,216,90,.15)!important;color:var(--d4-green-hi)!important;
+}
+html body .sub-client-deposit,
+html body .sub-client-deposit:link,
+html body .sub-client-deposit:visited,
+html body .sub-client-deposit:hover,
+html body .sub-client-deposit:active,
+html body .sub-client-deposit *{
+  background:linear-gradient(180deg,var(--d4-green-hi),var(--d4-green))!important;
+  border-color:var(--d4-green)!important;color:#06140b!important;-webkit-text-fill-color:#06140b!important;
+  box-shadow:0 7px 18px rgba(25,216,90,.18)!important;
+}
+html body .sub-client-menu-btn{
+  background:var(--d4-surface-2)!important;border:1px solid var(--d4-border)!important;color:#fff!important;border-radius:9px!important;
+}
+html body .sub-client-mobile{background:rgba(15,19,16,.98)!important;border:1px solid var(--d4-border)!important;box-shadow:0 18px 48px rgba(0,0,0,.38)!important}
+
+/* ===== COMMON SURFACES ===== */
+html body .sub-home,
+html body .sub-games-page,
+html body .withdraw-page,
+html body .aff-page,
+html body .affiliate-page,
+html body .welcome-bonus-page,
+html body .sub-auth-page,
+html body .sub-game-page,
+html body .pre-sub,
+html body .hero-section,
+html body .rarity-section,
+html body .comic-book{
+  background-color:var(--d4-bg)!important;color:var(--d4-text)!important;
+}
+html body .sub-home-panel,
+html body .sub-games-card,
+html body .sub-live-panel,
+html body .sub-ranking-panel,
+html body .withdraw-card,
+html body .aff-card,
+html body .sub-game-card,
+html body .welcome-bonus-card,
+html body .welcome-bonus-dialog,
+html body .pre-sub__card,
+html body .sub-auth-card,
+html body .ig-card,
+html body .properties,
+html body .rarity-row,
+html body .minting-container{
+  background:var(--d4-surface)!important;
+  border:1px solid var(--d4-border)!important;
+  color:var(--d4-text)!important;
+  box-shadow:0 14px 36px rgba(0,0,0,.20)!important;
+}
+html body .sub-home-panel,
+html body .sub-games-card,
+html body .sub-live-panel,
+html body .sub-ranking-panel,
+html body .withdraw-card,
+html body .aff-card,
+html body .sub-game-card,
+html body .welcome-bonus-card,
+html body .pre-sub__card,
+html body .sub-auth-card{border-radius:var(--d4-radius-lg)!important}
+
+/* ===== TYPOGRAPHY ===== */
+html body h1,html body h2,html body h3{color:#fff}
+html body .sub-home-title,
+html body .sub-games-card h1,
+html body .withdraw-title,
+html body .aff-title,
+html body .sub-game-title,
+html body .pre-sub__card h1{
+  color:#fff!important;letter-spacing:-.015em!important;
+}
+html body .sub-home-text,
+html body .sub-games-text,
+html body .withdraw-sub,
+html body .aff-sub,
+html body .aff-muted,
+html body .sub-game-text,
+html body .pre-sub__card p,
+html body .deposit-mini__label{
+  color:var(--d4-muted)!important;
+}
+
+/* ===== INPUTS ===== */
+html body input:not([type=checkbox]):not([type=radio]),
+html body select,
+html body textarea,
+html body .large-input-field,
+html body .w-input,
+html body .withdraw-input,
+html body .aff-input,
+html body .aff-select,
+html body .aff-link-input,
+html body .sub-game-input{
+  width:100%!important;min-width:0!important;min-height:44px!important;
+  background:var(--d4-surface-2)!important;color:#fff!important;
+  border:1px solid var(--d4-border)!important;border-radius:var(--d4-radius-sm)!important;
+  outline:none!important;box-shadow:none!important;
+}
+html body input:not([type=checkbox]):not([type=radio]):focus,
+html body select:focus,html body textarea:focus,
+html body .large-input-field:focus,html body .w-input:focus,
+html body .withdraw-input:focus,html body .aff-input:focus,html body .sub-game-input:focus{
+  border-color:var(--d4-green)!important;box-shadow:0 0 0 3px rgba(25,216,90,.09)!important;
+}
+html body input::placeholder,html body textarea::placeholder{color:#758078!important}
+
+/* ===== PRIMARY ACTIONS ===== */
+html body .primary-button,
+html body .w-button,
+html body input[type=submit],
+html body .sub-btn-green,
+html body .sub-home-cta,
+html body .deposit-mini__submit,
+html body .withdraw-submit,
+html body .aff-btn-primary,
+html body .aff-btn-green,
+html body .welcome-bonus-btn,
+html body .pre-sub__btn,
+html body .sub-game-submit,
+html body .sub-btn-game,
+html body .sub-result-popup__button--primary,
+html body .sub-min-balance-modal__ok,
+html body .sub-flow-toast__action{
+  min-height:46px!important;
+  background:linear-gradient(180deg,var(--d4-green-hi),var(--d4-green))!important;
+  border:1px solid rgba(43,231,109,.35)!important;
+  color:#06140b!important;-webkit-text-fill-color:#06140b!important;
+  border-radius:10px!important;font-weight:900!important;
+  box-shadow:0 7px 20px rgba(25,216,90,.18)!important;
+  text-decoration:none!important;
+}
+html body .primary-button:hover,
+html body .w-button:hover,
+html body .sub-home-cta:hover,
+html body .deposit-mini__submit:hover,
+html body .withdraw-submit:hover,
+html body .aff-btn-primary:hover,
+html body .welcome-bonus-btn:hover,
+html body .sub-game-submit:hover,
+html body .sub-btn-game:hover{filter:brightness(1.055)!important;transform:translateY(-1px)}
+html body .sub-home-cta-alt,
+html body .sub-home-small,
+html body .sub-btn-test,
+html body .sub-btn-dark,
+html body .aff-btn-dark,
+html body .welcome-bonus-btn-alt{
+  background:var(--d4-surface-2)!important;border:1px solid var(--d4-border)!important;color:#f5f7f5!important;-webkit-text-fill-color:#f5f7f5!important;box-shadow:none!important;
+}
+
+/* Home main play = brightest action */
+html body .sub-home-play-pulse,
+html body .sub-btn-game{
+  background:linear-gradient(180deg,#37ef79,#13c853)!important;
+  color:#06140b!important;-webkit-text-fill-color:#06140b!important;
+  box-shadow:0 7px 0 #087d36,0 0 26px rgba(25,216,90,.34)!important;
+}
+html body .sub-home-deposit-green,
+html body .sub-btn-deposit{
+  background:linear-gradient(180deg,#1cc85b,#0b9440)!important;
+  color:#06140b!important;-webkit-text-fill-color:#06140b!important;
+  border-color:#129d48!important;
+}
+@keyframes d4Pulse{
+  0%,100%{transform:scale(1);box-shadow:0 7px 0 #087d36,0 0 14px rgba(25,216,90,.24)}
+  50%{transform:scale(1.025);box-shadow:0 7px 0 #087d36,0 0 32px rgba(25,216,90,.58),0 0 0 7px rgba(25,216,90,.07)}
+}
+html body .sub-home-play-pulse,html body .sub-btn-game{animation:d4Pulse 1.9s ease-in-out infinite!important}
+
+/* ===== BANNERS / MEDIA ===== */
+html body .sub-home-banner,
+html body .sub-games-banner,
+html body .withdraw-banner,
+html body .aff-banner,
+html body .pre-sub__banner,
+html body .sub-game-banner{
+  background:#0d100e!important;border:1px solid rgba(25,216,90,.17)!important;
+  border-radius:var(--d4-radius-lg)!important;overflow:hidden!important;
+  box-shadow:0 16px 38px rgba(0,0,0,.28)!important;
+}
+html body .sub-home-banner img,
+html body .sub-games-banner img,
+html body .withdraw-banner img,
+html body .aff-banner img,
+html body .pre-sub__banner img,
+html body .sub-game-banner img,
+html body .deposit-mini__banner,
+html body .welcome-bonus-card>img{
+  width:100%!important;height:auto!important;max-height:none!important;object-fit:contain!important;display:block!important;
+}
+html body .sub-games-kicker{
+  background:rgba(7,12,9,.78)!important;border:1px solid rgba(25,216,90,.38)!important;color:#fff!important;
+}
+
+/* ===== HOME ===== */
+html body .sub-home{background:var(--d4-bg)!important}
+html body .sub-home-badge,
+html body .sub-home-step,
+html body .sub-home-sticky,
+html body .sub-flow-toast{
+  background:var(--d4-surface-2)!important;border:1px solid var(--d4-border)!important;
+}
+html body .sub-home-badge strong{color:#fff!important}
+html body .sub-home-step b{background:var(--d4-green)!important;color:#06140b!important}
+html body .sub-home-sticky{box-shadow:0 16px 40px rgba(0,0,0,.36)!important}
+html body .sub-flow-toast__icon{background:var(--d4-surface-3)!important}
+
+/* ===== GAME LIST / LIVE ===== */
+html body .sub-games-page{background:radial-gradient(rgba(25,216,90,.035) 1px,transparent 1px),var(--d4-bg)!important;background-size:22px 22px!important}
+html body .sub-games-page::before{opacity:.15!important;background:radial-gradient(circle at 50% 0%,rgba(25,216,90,.18),transparent 45%)!important}
+html body .sub-game-main-card{background:linear-gradient(180deg,#1ac75a,#075929)!important;box-shadow:0 0 0 1px rgba(25,216,90,.22),0 18px 42px rgba(0,0,0,.35)!important}
+html body .sub-games-trust div,
+html body .sub-payment,
+html body .sub-ranking-row{background:var(--d4-surface-2)!important;border:1px solid var(--d4-border-soft)!important}
+html body .sub-games-trust strong,
+html body .sub-payment-value,
+html body .sub-ranking-row .amount{color:var(--d4-green-hi)!important}
+html body .sub-avatar{border-color:var(--d4-green)!important}
+
+/* LIVE mobile: valor SEMPRE dentro do card */
+html body #sub-games-live-payments{width:100%!important;min-width:0!important;max-width:100%!important}
+html body #sub-games-live-payments .sub-payment{min-width:0!important;max-width:100%!important;overflow:hidden!important}
+@media(max-width:800px){
+  html body #sub-games-live-payments .sub-payment{
+    display:grid!important;grid-template-columns:34px minmax(0,1fr)!important;grid-template-rows:auto auto!important;
+    gap:2px 9px!important;align-items:center!important;padding:10px!important;
+  }
+  html body #sub-games-live-payments .sub-avatar{grid-column:1!important;grid-row:1 / span 2!important;width:34px!important;height:34px!important;min-width:34px!important}
+  html body #sub-games-live-payments .sub-payment>div:not(.sub-payment-value){grid-column:2!important;grid-row:1!important;min-width:0!important;overflow:hidden!important}
+  html body #sub-games-live-payments .sub-payment-value{
+    grid-column:2!important;grid-row:2!important;justify-self:start!important;margin:0!important;width:100%!important;max-width:100%!important;
+    text-align:left!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;font-size:11px!important;
+  }
+  html body #sub-games-live-payments .sub-payment-time{display:inline!important;margin-left:6px!important;color:var(--d4-muted-2)!important}
+}
+
+/* ===== DEPOSIT ===== */
+html body .deposit-mini{background:var(--d4-bg)!important;color:var(--d4-text)!important}
+html body .deposit-mini__box{background:var(--d4-surface)!important;border:1px solid var(--d4-border)!important;border-radius:10px!important}
+html body .deposit-mini__head{border-color:var(--d4-border)!important}
+html body .deposit-mini__back,
+html body .deposit-mini__note,
+html body .deposit-mini__timer{color:var(--d4-green-hi)!important}
+html body .deposit-mini__input input,
+html body .deposit-mini__code{background:var(--d4-surface-2)!important;border-color:var(--d4-border)!important}
+html body .deposit-mini__quick button{background:var(--d4-surface-2)!important;border-color:var(--d4-border)!important;color:#fff!important}
+html body .deposit-mini__quick button.active{border-color:var(--d4-green)!important}
+html body .deposit-mini__quick button.featured,
+html body .deposit-mini__quick button.featured.active{background:var(--d4-green)!important;border-color:var(--d4-green)!important;color:#06140b!important;box-shadow:0 6px 18px rgba(25,216,90,.16)!important}
+html body .deposit-mini__copy{background:var(--d4-surface-2)!important;border-color:var(--d4-green)!important;color:var(--d4-green-hi)!important}
+
+/* ===== WITHDRAW ===== */
+html body .withdraw-chip{background:var(--d4-surface-2)!important;border-color:var(--d4-border)!important;color:var(--d4-green-hi)!important}
+html body .withdraw-type-btn,
+html body .withdraw-quick-btn{background:var(--d4-surface-2)!important;border-color:var(--d4-border)!important;color:#fff!important}
+html body .withdraw-type-btn.is-active,
+html body .withdraw-quick-btn.is-active{background:var(--d4-green)!important;border-color:var(--d4-green)!important;color:#06140b!important}
+html body .withdraw-note{color:var(--d4-green-hi)!important}
+html body .withdraw-progress{background:var(--d4-surface-2)!important;border-color:var(--d4-border)!important}
+html body .withdraw-progress-bar{background:linear-gradient(90deg,#0fa64a,#2be76d)!important}
+html body .withdraw-row{background:var(--d4-surface-2)!important;border-color:var(--d4-border)!important}
+html body .withdraw-status.pending{background:rgba(126,185,255,.13)!important;color:#8fc3ff!important}
+html body .withdraw-status.paid{background:rgba(25,216,90,.13)!important;color:#7af0a8!important}
+
+/* ===== AFFILIATE ===== */
+html body .aff-stat,
+html body .aff-mini,
+html body .aff-link-box,
+html body .aff-commission,
+html body .aff-chart,
+html body .aff-state-card{background:var(--d4-surface-2)!important;border-color:var(--d4-border)!important}
+html body .aff-badge,
+html body .aff-money,
+html body .aff-stat strong,
+html body .aff-commission strong,
+html body .aff-mini strong,
+html body .aff-card .green,
+html body .aff-card .yellow{color:var(--d4-green-hi)!important}
+html body .aff-btn-primary,html body .aff-btn-green{color:#06140b!important;-webkit-text-fill-color:#06140b!important}
+html body .aff-table{background:var(--d4-surface)!important;border-color:var(--d4-border)!important}
+html body .aff-table th{background:#123e25!important;color:#fff!important}
+html body .aff-table td{background:var(--d4-surface)!important;border-color:var(--d4-border-soft)!important;color:#eef2ef!important}
+
+/* ===== AUTH ===== */
+html body .sub-auth-page{background:radial-gradient(circle at 50% 0%,rgba(25,216,90,.10),transparent 34%),var(--d4-bg)!important}
+html body .sub-auth-card{max-width:430px!important}
+html body .sub-auth-link a{color:var(--d4-green-hi)!important}
+html body .sub-conversion-pills span,
+html body .sub-register-trust div{background:var(--d4-surface-2)!important;border-color:var(--d4-border)!important}
+
+/* ===== WELCOME / POPUPS ===== */
+html body .welcome-bonus-value,
+html body .welcome-bonus-dialog .amount{color:var(--d4-green-hi)!important}
+html body .sub-min-balance-modal__card,
+html body .sub-result-popup__card{background:var(--d4-surface)!important;border-color:var(--d4-border)!important}
+html body .sub-result-popup__button--secondary{background:#1676d2!important;border-color:#1676d2!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+
+/* ===== LEGACY PAGES / OLD GAMES / FORMS ===== */
+html body .hero-section,
+html body .comic-book,
+html body .rarity-section{background-image:none!important;background:var(--d4-bg)!important}
+html body .minting-container{max-width:680px!important;border-radius:var(--d4-radius-lg)!important}
+html body .balance,html body #wins{background:var(--d4-surface)!important;border:1px solid var(--d4-border)!important;color:#fff!important;box-shadow:none!important}
+html body .custom-table,html body .indications,html body table{border-color:var(--d4-border)!important}
+html body .custom-table thead,html body .indications th{background:#123e25!important;color:#fff!important}
+html body .progress-bar-fill{background:linear-gradient(90deg,#0c9f43,#2be76d)!important;background-image:none!important}
+html body .__main_wrapper{background:var(--d4-bg)!important}
+html body .__main_section,html body .__live_wins,html body .buy{background:var(--d4-surface)!important;border-color:var(--d4-border)!important}
+html body .__win_card,html body .__game{background:var(--d4-surface-2)!important;border-color:var(--d4-border-soft)!important}
+html body .__game_name{background:linear-gradient(180deg,#13b64e,#087734)!important}
+
+/* ===== MARKETPLACE ===== */
+html body .__hero-section,
+html body .__product_section{background:var(--d4-bg)!important;color:var(--d4-text)!important}
+html body .__product{background:var(--d4-surface)!important;border:1px solid var(--d4-border)!important;border-radius:var(--d4-radius)!important;overflow:hidden!important}
+html body .__product_title,html body .__product_price{color:#fff!important}
+html body .__cta{background:var(--d4-green)!important;color:#06140b!important;border-radius:10px!important;font-weight:900!important}
+
+/* ===== TABLES / OVERFLOW ===== */
+html body .aff-table-wrap,
+html body .tableWrapper,
+html body .table-responsive{width:100%!important;max-width:100%!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important}
+html body .aff-table{width:100%!important;min-width:560px!important}
+html body .custom-table{width:100%!important;max-width:100%!important;table-layout:auto!important}
+html body td,html body th{overflow-wrap:anywhere}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:900px){
+  html body .sub-client-links{display:none!important}
+  html body .sub-client-menu-btn{display:inline-flex!important;align-items:center!important;justify-content:center!important}
+  html body .sub-home-hero,html body .sub-games-hero{grid-template-columns:1fr!important}
+  html body .aff-commission-grid,html body .aff-graphs{grid-template-columns:1fr!important}
+}
+@media(max-width:760px){
+  body{padding-bottom:max(74px,env(safe-area-inset-bottom))!important}
+  html body .sub-client-menu-btn{display:none!important}
+  html body .sub-client-mobile{
+    position:fixed!important;left:8px!important;right:8px!important;top:auto!important;bottom:max(8px,env(safe-area-inset-bottom))!important;
+    display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:6px!important;padding:7px!important;border-radius:14px!important;z-index:9990!important;
+  }
+  html body .sub-client-mobile .sub-client-link{display:flex!important;min-height:42px!important;padding:5px!important;font-size:10px!important;text-align:center!important;justify-content:center!important;white-space:normal!important}
+  html body .sub-client-mobile .sub-client-link:nth-child(n+5){display:none!important}
+  html body .sub-home,html body .sub-games-page,html body .withdraw-page,html body .aff-page,html body .sub-game-page{padding-left:10px!important;padding-right:10px!important}
+  html body .sub-home-panel,html body .sub-games-card,html body .sub-live-panel,html body .sub-ranking-panel,html body .withdraw-card,html body .aff-card,html body .sub-game-card{padding:14px!important}
+  html body .aff-stats{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  html body .withdraw-type-grid,html body .withdraw-quick-grid,html body .sub-game-quick{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  html body .sub-home-badges,html body .sub-games-trust{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  html body input:not([type=checkbox]):not([type=radio]),html body select,html body textarea{font-size:16px!important}
+}
+@media(max-width:520px){
+  html body .sub-nav-inner,html body .sub-client-nav-inner{padding:8px 9px!important}
+  html body .sub-top-bonus,html body .sub-client-topbar{padding:5px 8px!important;gap:6px!important}
+  html body .sub-top-bonus>span,html body .sub-client-topbar>span{min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+  html body .sub-home-sticky{left:8px!important;right:8px!important;width:auto!important;max-width:calc(100vw - 16px)!important;transform:none!important}
+  html body .aff-link-row{flex-direction:column!important;align-items:stretch!important}
+  html body .aff-copy-small{width:100%!important}
+}
+@media(max-width:390px){
+  html body .sub-logo-img,html body .sub-client-logo img{max-width:104px!important;max-height:28px!important}
+  html body .sub-games-trust,html body .sub-home-badges{gap:6px!important}
+  html body .sub-home-badge,html body .sub-games-trust div{padding:9px 4px!important}
+  html body .aff-stats{gap:7px!important}
+  html body .deposit-mini__quick{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:340px){
+  html body .sub-logo-img,html body .sub-client-logo img{max-width:88px!important}
+  html body .sub-client-mobile{left:5px!important;right:5px!important;gap:4px!important;padding:5px!important}
+  html body .sub-client-mobile .sub-client-link{font-size:9px!important;padding:4px 2px!important}
+}
+@media(max-height:520px) and (orientation:landscape){
+  html body .sub-auth-shell,html body .welcome-bonus-page,html body .pre-sub{align-items:flex-start!important;padding-top:12px!important}
+  html body .sub-result-popup__card,html body .sub-min-balance-modal__card,html body .welcome-bonus-dialog{max-height:calc(100dvh - 12px)!important;overflow-y:auto!important}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+}

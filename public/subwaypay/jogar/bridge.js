@@ -83,7 +83,7 @@ window.addEventListener('message', (event) => {
 
 let round = read('subway-demo-round', null);
 if (!round?.betId || round.status !== 'active' || round.email !== sessionEmail || !(Number(round.entry) > 0)) {
-  location.replace('../');
+  location.replace('../painel.html');
   return;
 }
 
@@ -207,7 +207,7 @@ async function finish(outcome) {
       retryBtn.onclick = (e) => {
         e.preventDefault();
         try { sessionStorage.setItem('subway_needed_deposit', String(round.entry)); } catch (_) {}
-        location.href = '../#depositar';
+        location.href = '../painel.html#depositar';
       };
     }
   }
@@ -348,7 +348,7 @@ document.querySelector('#result-retry')?.addEventListener('click', async (event)
   const activeU = currUsers.find(u => u.email === sessionEmail);
   const entryVal = (round && round.entry) || 10;
   if (!activeU || activeU.balance < entryVal || activeU.balance <= 0) {
-    location.href = '../#depositar';
+    location.href = '../painel.html#depositar';
     return;
   }
 
