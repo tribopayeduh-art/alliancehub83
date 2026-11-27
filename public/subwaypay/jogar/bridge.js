@@ -351,7 +351,8 @@ document.querySelector('#result-home')?.addEventListener('click', () => {
   location.href = '../#jogar';
 });
 
-document.querySelector('#result-retry')?.addEventListener('click', async () => {
+document.querySelector('#result-retry')?.addEventListener('click', async (event) => {
+  if (event.currentTarget.onclick) return;
   const currUsers = read('subway-demo-users', []);
   const activeU = currUsers.find(u => u.email === sessionEmail);
   const entryVal = (round && round.entry) || 10;
