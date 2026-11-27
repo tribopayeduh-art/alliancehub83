@@ -120,7 +120,7 @@ function home(){const u=current();app.innerHTML=`<section class="layout"><div cl
     return;
   }
   const active=read('subway-demo-round',null);
-  if(active?.status==='active'&&active.email===u.email){
+  if(active?.betId&&active.status==='active'&&active.email===u.email){
     toast('Retomando sua corrida.');
     const qStr=window.location.search||`?email=${encodeURIComponent(u.email)}&name=${encodeURIComponent(u.name)}&balance=${encodeURIComponent(u.balance)}`;
     location.href='jogar/'+qStr;
@@ -157,7 +157,8 @@ function home(){const u=current();app.innerHTML=`<section class="layout"><div cl
       }
       throw new Error(startData.error||'Falha ao confirmar aposta.');
     }
-    const newBal=typeof startData.balance==='number'?startData.balance:Math.round((u.balance-entry)*100)/100;
+    if (!startData.betId || typeof startData.balance !== 'number') throw new Error('A entrada não foi confirmada pelo servidor.');
+    const newBal=startData.balance;
     u.balance=newBal;
     persist();
     const newRound={

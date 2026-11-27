@@ -82,14 +82,9 @@ window.addEventListener('message', (event) => {
 });
 
 let round = read('subway-demo-round', null);
-if (!round || round.status !== 'active' || round.email !== sessionEmail) {
-  round = {
-    id: (typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : 'rnd_' + Date.now()),
-    email: sessionEmail,
-    entry: 10,
-    status: 'active'
-  };
-  localStorage.setItem('subway-demo-round', JSON.stringify(round));
+if (!round?.betId || round.status !== 'active' || round.email !== sessionEmail || !(Number(round.entry) > 0)) {
+  location.replace('../');
+  return;
 }
 
 let finished = false, engine = null, getCoins = () => 0, cashoutUnlocked = false;
@@ -102,16 +97,14 @@ const hudScore = document.querySelector('#hud-score');
 
 const money = n => Number(n).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
-function getSubwayTargetMultiplier() {
-  const cfg = window.SubwayConfig || (typeof SubwayRound !== 'undefined' && SubwayRound.config) || {};
-  return Number(cfg.maxMultiplier) || 5;
-}
+function targetCents(entry) { return Math.round(Number(entry) * 100) * 5; }
+function reachedTarget(entry, value) { return Math.round(value * 100) >= targetCents(entry); }
 function getSubwayCashoutMultiplier() {
   const cfg = window.SubwayConfig || (typeof SubwayRound !== 'undefined' && SubwayRound.config) || {};
   return Number(cfg.minCashoutMultiplier) || 1.5;
 }
 function syncSubwayHud() {
-  if (hudTarget) hudTarget.textContent = '80 moedas';
+  if (hudTarget) hudTarget.textContent = money(targetCents(round.entry) / 100);
   if (note && !cashoutUnlocked) {
     note.textContent = 'Continue coletando moedas para liberar a confirmação do resultado.';
   }
@@ -157,7 +150,7 @@ function openResult() {
 
 async function finish(outcome) {
   const coinsNow = Math.max(0, Number(getCoins ? getCoins() : (engine?.stats?.coins || 0)) || 0);
-  const isTargetCompleted = coinsNow >= 80 || (typeof SubwayRound !== 'undefined' && SubwayRound.payout(round.entry, coinsNow) >= round.entry * 5.0);
+  const isTargetCompleted = reachedTarget(round.entry, raceCoinValue(coinsNow, influencerCoinRate));
   if (finished || (outcome === 'cashout' && !cashoutUnlocked && !isTargetCompleted)) return;
   const stored = read('subway-demo-round', null);
   if (!stored || stored.id !== round.id || stored.status !== 'active') return;
@@ -175,16 +168,16 @@ async function finish(outcome) {
   if (retry) retry.disabled = true;
   try{
     const token=localStorage.getItem('pg_auth_token')||localStorage.getItem('paygateway_token')||localStorage.getItem('token');
-    const response=await fetch('/api/game/subway-pay/settle',{method:'POST',headers:{'Content-Type':'application/json',...(token?{Authorization:'Bearer '+token}:{})},signal:AbortSignal.timeout(15000),body:JSON.stringify({betId:stored.betId||stored.id,outcome,coins})});
-    const data=await response.json();if(!response.ok||typeof data.balance!=='number')throw new Error(data.error||'Resultado não confirmado.');
-    round={...stored,payout:data.payout,status:data.outcome};outcome=data.outcome === 'cashout' && isTargetCompleted ? 'win' : data.outcome;
+    const response=await fetch('/api/game/subway-pay/settle',{method:'POST',headers:{'Content-Type':'application/json',...(token?{Authorization:'Bearer '+token}:{})},signal:AbortSignal.timeout(15000),body:JSON.stringify({betId:stored.betId,outcome,coins})});
+    const data=await response.json();if(!response.ok||typeof data.balance!=='number')throw new Error(response.status === 401 ? 'Sua sessão expirou. Entre novamente no painel.' : response.status === 404 ? 'A rodada não foi localizada para esta conta.' : response.status === 409 ? (data.error || 'A rodada precisa de revisão.') : 'Não foi possível confirmar a corrida. Tente novamente.');
+    round={...stored,payout:data.payout,status:data.outcome};outcome=data.outcome;
     const u=currUsers.find(x=>x.email===round.email);if(u)u.balance=data.balance;
     try { localStorage.setItem('subway-demo-users',JSON.stringify(currUsers)); localStorage.setItem('subway-demo-round',JSON.stringify(round)); } catch (_) {}
     if(window.parent&&window.parent!==window)window.parent.postMessage({source:'subway-pay-shell',event:'balance',balance:data.balance,outcome,round},location.origin);
   }catch(error){
     finished=false;
     if (title) title.textContent = 'Resultado não confirmado';
-    if (detail) detail.textContent = 'Não foi possível confirmar a corrida. Tente novamente.';
+    if (detail) detail.textContent = error.name === 'Error' && /^(Sua sessão|A rodada|Rodada anterior)/.test(error.message) ? error.message : 'Não foi possível confirmar a corrida. Tente novamente.';
     if (amount) amount.textContent = '';
     if (retry) { retry.disabled = false; retry.hidden = false; retry.textContent = 'Tentar confirmar novamente'; retry.onclick = () => finish(outcome); }
     openResult();
@@ -275,7 +268,6 @@ window.SubwayBridge = {
 
     if (note) {
       const minM = getSubwayCashoutMultiplier();
-      const targetM = getSubwayTargetMultiplier();
       note.textContent = 'Continue coletando moedas para liberar a confirmação do resultado.';
     }
   },
@@ -305,8 +297,7 @@ window.SubwayBridge = {
             note.style.color = '';
             note.style.fontWeight = '';
             const minM = getSubwayCashoutMultiplier();
-            const targetM = getSubwayTargetMultiplier();
-            note.textContent = 'Continue coletando moedas para liberar a confirmação do resultado.';
+                  note.textContent = 'Continue coletando moedas para liberar a confirmação do resultado.';
           }
         }, 2200);
       }
@@ -377,7 +368,7 @@ document.querySelector('#result-retry')?.addEventListener('click', async (event)
       })
     });
     const startData = await startRes.json();
-    if (startRes.ok && typeof startData.balance === 'number') {
+    if (startRes.ok && startData.betId && typeof startData.balance === 'number') {
       activeU.balance = startData.balance;
       const newRound = {
         id: startData.betId || ('rnd_' + Date.now()),
@@ -410,8 +401,8 @@ setInterval(() => {
     }
   }
   const coins = Math.max(0, Number(getCoins ? getCoins() : (gameInst?.stats?.coins || 0)) || 0);
-  const value = coins === 0 ? 0 : (typeof SubwayRound !== 'undefined' ? SubwayRound.payout(round.entry, coins) : 0);
-  if (hudValue) { const displayValue = money(raceCoinValue(coins, influencerCoinRate)); if (hudValue.textContent !== displayValue) hudValue.textContent = displayValue; }
+  const value = raceCoinValue(coins, influencerCoinRate);
+  if (hudValue) { const displayValue = money(value); if (hudValue.textContent !== displayValue) hudValue.textContent = displayValue; }
   if (hudScore) hudScore.textContent = Math.max(0, Math.floor(Number(gameInst?.stats?.score) || 0)).toString().padStart(6, '0');
   cashoutUnlocked = typeof SubwayRound !== 'undefined' ? SubwayRound.canCashout(round.entry, coins) : (coins >= 10);
   if (cash) {
@@ -426,14 +417,10 @@ setInterval(() => {
     note.hidden = cashoutUnlocked;
     if (!cashoutUnlocked) {
       const minM = getSubwayCashoutMultiplier();
-      const targetM = getSubwayTargetMultiplier();
       note.textContent = 'Continue coletando moedas para liberar a confirmação do resultado.';
     }
   }
-  // Auto-cashout triggers ONLY when completing 5x the bet amount (80 coins or value >= entry * 5.0)
-  const targetMultiplier = getSubwayTargetMultiplier();
-  const maxTargetVal = Math.round(round.entry * targetMultiplier * 100) / 100;
-  if (value >= maxTargetVal || coins >= 80) {
+  if (reachedTarget(round.entry, value)) {
     finish('cashout');
   }
 }, 120);
