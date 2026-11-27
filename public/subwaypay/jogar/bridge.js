@@ -308,7 +308,7 @@ window.SubwayBridge = {
 };
 
 if (cash) {
-  cash.onclick = () => { if (!finished && cashoutUnlocked) finish('cashout'); };
+  cash.onclick = () => { if (!finished && cashoutUnlocked) void finish('cashout'); };
 }
 
 document.querySelector('#leave')?.addEventListener('click', () => {
