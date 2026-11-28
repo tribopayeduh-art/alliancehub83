@@ -40,7 +40,55 @@ export async function confirmAffiliatePlan(payload:any,store:any=supabaseStore) 
  });
 }
 
+export async function assignAffiliatePlan({userId,actorId,planId:target,games:selection,expected}:{userId:string;actorId:string;planId:unknown;games:unknown;expected:unknown},store:any=supabaseStore){
+ const plan=findAffiliatePlan(target);
+ if(!plan)throw err('Plano inválido.',400);
+ let games:string[];
+ try{games=validatePlanSelection(plan.id,selection);}catch(e:any){throw err(e.message,400);}
+ const rows=await store.collection('affiliates').where('userId','==',userId).get();
+ const affiliateRef=rows.docs[0]?.ref;
+ if(!affiliateRef)throw err('Conta de afiliado não encontrada.',404);
+ const audit=store.collection('affiliate_plan_audit').doc(crypto.randomUUID());
+ return store.runTransaction(async(tx:any)=>{
+  const userRef=store.collection('users').doc(userId),accountRef=accounts(store).doc(userId);
+  const user=(await tx.get(userRef)).data(),account=(await tx.get(accountRef)).data(),affiliate=(await tx.get(affiliateRef)).data();
+  if(!user||affiliate?.userId!==userId)throw err('Conta de afiliado não encontrada.',404);
+  const previous=account?.planId??(user.affiliatePlanRequired?null:'alliance');
+  if(expected!==previous)throw err('O plano mudou. Reabra o painel antes de salvar.',409);
+  if(account?.orderRef){
+   const order=(await tx.get(collection(store).doc(account.orderRef))).data();
+   if(order?.status==='pending')throw err('Há uma cobrança PIX pendente. Concilie o pagamento antes de alterar o plano.',409);
+  }
+  const at=new Date().toISOString();
+  tx.set(accountRef,{planId:plan.id,games,activatedAt:at,source:'admin',assignedBy:actorId});
+  tx.update(userRef,{affiliatePlanRequired:true});
+  tx.update(affiliateRef,{status:'active',revSharePercent:plan.commissionPercent});
+  tx.set(audit,{userId,actorId,previous,previousGames:account?.games??[],planId:plan.id,games,at});
+  return {planId:plan.id,games};
+ });
+}
+
 export function registerAffiliatePlanCheckout(app:Express){
+ // This router is mounted after the server's verified session middleware.
+ const canChange=(req:any)=>req.userId&&req.user?.id===req.userId&&(req.user.role==='superadmin'||req.user.role==='admin'&&req.user.adminPermissions?.canManageUsers&&req.user.adminPermissions?.canManageBalances);
+ const adminRoute='/api/admin/affiliate-plans/:userId';
+ app.get(adminRoute,async(req:any,res)=>{
+  res.set('Cache-Control','no-store');
+  if(!canChange(req))return res.sendStatus(403);
+  try{
+   const user=(await supabaseStore.collection('users').doc(req.params.userId).get()).data();
+   const rows=await supabaseStore.collection('affiliates').where('userId','==',req.params.userId).get();
+   if(!user||!rows.docs.length)return res.status(404).json({error:'Conta de afiliado não encontrada.'});
+   const account=(await accounts(supabaseStore).doc(req.params.userId).get()).data();
+   return res.json({planId:account?.planId??(user.affiliatePlanRequired?null:'alliance'),games:account?.games??[]});
+  }catch{return res.status(503).json({error:'Não foi possível consultar o plano.'});}
+ });
+ app.put(adminRoute,async(req:any,res)=>{
+  res.set('Cache-Control','no-store');
+  if(!canChange(req))return res.sendStatus(403);
+  try{return res.json(await assignAffiliatePlan({userId:req.params.userId,actorId:req.userId,planId:req.body?.planId,games:req.body?.games,expected:req.body?.expected}));}
+  catch(e:any){return res.status(e.status||503).json({error:e.status?e.message:'Não foi possível alterar o plano.'});}
+ });
  app.get('/api/affiliate-plans',async(req:any,res)=>{
   res.set('Cache-Control','no-store');
   try {

@@ -46,3 +46,23 @@ test('legacy Hub defaults to Alliance without changing negotiated or purchased r
  assert.equal(legacyAllianceRate({role:'affiliate',isInfluencer:true},70),70);
  assert.equal(legacyAllianceRate({role:'user'},70),70);
 });
+
+test('admin changes the assigned plan without touching balances or creating a charge',async()=>{
+ const {assignAffiliatePlan}=await import('../server/affiliatePlanCheckout.ts');
+ const data=new Map<string,any>([['users/u',{id:'u',role:'affiliate'}],['affiliates/a',{userId:'u',status:'active',affiliateBalance:123,revSharePercent:75}]]);
+ const store:any={
+  collection:(name:string)=>({doc:(id:string)=>name+'/'+id,where:()=>({get:async()=>({docs:[{ref:'affiliates/a'}]})})}),
+  runTransaction:(fn:any)=>fn({get:async(key:string)=>({data:()=>data.get(key)}),set:(key:string,v:any)=>data.set(key,v),update:(key:string,v:any)=>data.set(key,{...data.get(key),...v})}),
+ };
+ const input={userId:'u',actorId:'admin',planId:'escale',games:[],expected:'alliance'};
+ assert.deepEqual(await assignAffiliatePlan(input,store),{planId:'escale',games:[]});
+ assert.equal(data.get('users/u').affiliatePlanRequired,true);
+ assert.equal(data.get('affiliates/a').revSharePercent,85);
+ assert.equal(data.get('affiliates/a').affiliateBalance,123);
+ assert.equal([...data.keys()].filter(k=>k.startsWith('affiliate_plan_audit/')).length,1);
+ assert.equal([...data.keys()].some(k=>k.startsWith('affiliate_plan_orders/')),false);
+ await assert.rejects(assignAffiliatePlan(input,store),{status:409});
+ data.set('affiliate_plan_accounts/u',{planId:'escale',orderRef:'pending'});
+ data.set('affiliate_plan_orders/pending',{status:'pending'});
+ await assert.rejects(assignAffiliatePlan({...input,expected:'escale',planId:'alliance'},store),{status:409});
+});

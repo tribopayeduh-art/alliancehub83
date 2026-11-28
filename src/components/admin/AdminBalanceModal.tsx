@@ -1,3 +1,4 @@
+import {AdminAffiliatePlan} from './AdminAffiliatePlan';
 import {InexLoader} from '../InexLoader';
 import React, { useState, useEffect } from 'react';
 import {
@@ -38,11 +39,13 @@ interface AdminBalanceModalProps {
     isInfluencer?: boolean;
   }) => Promise<void>;
   loading: boolean;
+  planToken?: string;
+  onPlanSaved?:()=>void;
   initialWallet?: 'player' | 'affiliate';
 }
 
 export const AdminBalanceModal: React.FC<AdminBalanceModalProps> = ({
-  user,
+  user,planToken,onPlanSaved,
   isOpen,
   onClose,
   onSave,
@@ -138,6 +141,7 @@ export const AdminBalanceModal: React.FC<AdminBalanceModalProps> = ({
       title="Ajustar carteira"
       subtitle={`${user.name} · ${user.email}`}
     >
+      {isOpen&&user.affiliateInfo&&planToken&&<AdminAffiliatePlan userId={user.id} token={planToken} onSaved={onPlanSaved}/>}
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Wallet Selector Tabs */}
         <div className="space-y-1.5">
