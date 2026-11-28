@@ -231,7 +231,7 @@ export const GAMES_SEO_DATA: Record<string, GameSEOMetadata> = {
   }
 };
 
-GAMES_SEO_DATA.countmasters={...GAMES_SEO_DATA.blockwin,id:'countmasters',name:'Count Masters',shortName:'Count Masters',title:'Count Masters',description:'Escolha portais, enfrente etapas e acompanhe sua rodada.',keywords:['Count Masters','portais','multidões'],canonicalPath:'/?site=countmasters',image:'/assets/game-banners/count-masters.webp',favicon:'/assets/game-banners/count-masters.webp',category:'Etapas',genre:['StrategyGame'],ratingValue:'0',reviewCount:'0'};
+GAMES_SEO_DATA.countmasters={...GAMES_SEO_DATA.blockwin,id:'countmasters',name:'County Pix',shortName:'County Pix',title:'County Pix',description:'Escolha portais, enfrente etapas e acompanhe sua rodada.',keywords:['Count Masters','portais','multidões'],canonicalPath:'/?site=countmasters',image:'/assets/game-banners/count-masters.webp',favicon:'/assets/game-banners/county-pix-icon.webp',category:'Etapas',genre:['StrategyGame'],ratingValue:'0',reviewCount:'0'};
 
 /**
  * Normalizes any game ID or alias to canonical game key

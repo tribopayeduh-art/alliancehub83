@@ -59,6 +59,16 @@ interface GameCatalogItem {
 
 const GAMES_LIST: GameCatalogItem[] = [
   {
+    id: 'countmasters',
+    title: 'County Pix',
+    category: 'originais',
+    multiplier: 'Corrida de multidões',
+    badge: 'NOVO',
+    playersOnline: 0,
+    image: '/assets/game-banners/count-masters.webp',
+    accentColor: 'from-indigo-500 to-violet-700',
+  },
+  {
     id: 'subwaypay',
     title: 'Subway Pay',
     category: 'originais',
@@ -244,6 +254,11 @@ export const GamesView: React.FC<GamesViewProps> = ({
 
   const launchGame = (game: GameCatalogItem) => {
     const normalizedId = normalizeGameId(game.id);
+    if (normalizedId === 'countmasters') {
+      setTrackedGame(normalizedId, 'lobby_launch_click');
+      setSelectedGameId(normalizedId);
+      return;
+    }
     const domain = GAME_DOMAINS[normalizedId];
     if (!domain) { onShowToast('Este jogo ainda não tem domínio configurado.', 'info'); return; }
     setTrackedGame(normalizedId, 'lobby_launch_click');
@@ -396,7 +411,7 @@ export const GamesView: React.FC<GamesViewProps> = ({
   ];
 
   const availableCategories=categories.filter(c=>c.id==='todos'||catalogGames.some(g=>g.category===c.id));
-  return <div className="games-view clean-section games-clean"><header className="clean-heading"><div><span>EXPLORE O CATÁLOGO</span><h1>Jogos<span>.</span></h1><p>Encontre, acompanhe e compartilhe.</p></div><span className="clean-count">{catalogGames.length} jogos</span></header><section className="clean-game-toolbar"><label className="clean-search"><Search size={17}/><input type="search" aria-label="Buscar jogos" placeholder="Qual jogo você procura?" value={searchQuery} onChange={e=>setSearchQuery(e.target.value)}/>{searchQuery&&<button onClick={()=>setSearchQuery('')} aria-label="Limpar busca"><X size={15}/></button>}</label><div className="clean-tabs" aria-label="Categorias de jogos">{availableCategories.map(c=><button key={c.id} aria-pressed={activeCategory===c.id} className={activeCategory===c.id?'active':''} onClick={()=>setActiveCategory(c.id as typeof activeCategory)}>{c.label}</button>)}</div></section><div className="clean-catalog-heading"><h2>{activeCategory==='todos'?'Todos os jogos':categories.find(c=>c.id===activeCategory)?.label}</h2><span>{filteredGames.length} disponíveis</span></div>{filteredGames.length?<CurvedGameGallery>{filteredGames.map((game,index)=><article className="curved-game-slot" key={game.id}><div className="curved-game-surface"><button type="button" className="curved-game-banner" aria-label={showAffiliateMetrics ? `Ver desempenho de ${game.title}` : `Jogar ${game.title}`} onClick={()=>showAffiliateMetrics ? setMetricsGame(game) : launchGame(game)}><img className="curved-game-art" src={game.image} alt="" width={1932} height={814} loading={index===0?'eager':'lazy'} decoding="async"/></button><footer className="curved-game-footer"><div><h3>{game.title}</h3><p>{categories.find(c=>c.id===game.category)?.label||game.category}</p></div><nav aria-label={`Ações de ${game.title}`}><button onClick={e=>void handleIndicateGame(e,game)}><Send size={13}/>Indicar</button>{showAffiliateMetrics && <button type="button" onClick={()=>setMetricsGame(game)} aria-label={`Ver desempenho de ${game.title}`}><TrendingUp size={14}/>Desempenho</button>}</nav></footer></div></article>)}</CurvedGameGallery>:<div className="clean-empty"><Search size={28}/><h3>Nenhum jogo encontrado</h3><p>Tente outro nome ou escolha outra categoria.</p><button onClick={()=>{setSearchQuery('');setActiveCategory('todos')}}>Limpar filtros</button></div>}
+  return <div className="games-view clean-section games-clean"><header className="clean-heading"><div><span>EXPLORE O CATÁLOGO</span><h1>Jogos<span>.</span></h1><p>Encontre, acompanhe e compartilhe.</p></div><span className="clean-count">{catalogGames.length} jogos</span></header><section className="clean-game-toolbar"><label className="clean-search"><Search size={17}/><input type="search" aria-label="Buscar jogos" placeholder="Qual jogo você procura?" value={searchQuery} onChange={e=>setSearchQuery(e.target.value)}/>{searchQuery&&<button onClick={()=>setSearchQuery('')} aria-label="Limpar busca"><X size={15}/></button>}</label><div className="clean-tabs" aria-label="Categorias de jogos">{availableCategories.map(c=><button key={c.id} aria-pressed={activeCategory===c.id} className={activeCategory===c.id?'active':''} onClick={()=>setActiveCategory(c.id as typeof activeCategory)}>{c.label}</button>)}</div></section><div className="clean-catalog-heading"><h2>{activeCategory==='todos'?'Todos os jogos':categories.find(c=>c.id===activeCategory)?.label}</h2><span>{filteredGames.length} disponíveis</span></div>{filteredGames.length?<CurvedGameGallery>{filteredGames.map((game,index)=><article className="curved-game-slot" key={game.id}><div className="curved-game-surface"><button type="button" className="curved-game-banner" aria-label={showAffiliateMetrics ? `Ver desempenho de ${game.title}` : `Jogar ${game.title}`} onClick={()=>showAffiliateMetrics ? setMetricsGame(game) : launchGame(game)}><img className="curved-game-art" src={game.image} alt="" width={1932} height={814} loading={index===0?'eager':'lazy'} decoding="async"/></button><footer className="curved-game-footer"><div><h3>{game.title}</h3><p>{categories.find(c=>c.id===game.category)?.label||game.category}</p></div><nav aria-label={`Ações de ${game.title}`}>{showAffiliateMetrics && game.id==='countmasters' && <button type="button" onClick={()=>launchGame(game)}>Jogar</button>}<button onClick={e=>void handleIndicateGame(e,game)}><Send size={13}/>Indicar</button>{showAffiliateMetrics && <button type="button" onClick={()=>setMetricsGame(game)} aria-label={`Ver desempenho de ${game.title}`}><TrendingUp size={14}/>Desempenho</button>}</nav></footer></div></article>)}</CurvedGameGallery>:<div className="clean-empty"><Search size={28}/><h3>Nenhum jogo encontrado</h3><p>Tente outro nome ou escolha outra categoria.</p><button onClick={()=>{setSearchQuery('');setActiveCategory('todos')}}>Limpar filtros</button></div>}
         <Modal isOpen={upgradeOpen} onClose={()=>setUpgradeOpen(false)} title="Libere mais jogos">
           <p>Seu plano atual não inclui este jogo. Faça upgrade pagando só a diferença entre os planos.</p>
           <button type="button" className="plan-upgrade" onClick={()=>{setUpgradeOpen(false);onUpgradePlan?.();}}>Ver opções de upgrade</button>
