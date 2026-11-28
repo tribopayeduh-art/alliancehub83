@@ -1,3 +1,4 @@
+import {AdminAffiliatePlan} from './AdminAffiliatePlan';
 import {InexLoader} from '../InexLoader';
 import React, { useState, useEffect } from 'react';
 import {
@@ -38,11 +39,13 @@ interface AdminBalanceModalProps {
     isInfluencer?: boolean;
   }) => Promise<void>;
   loading: boolean;
+  planToken?: string;
+  onPlanSaved?:()=>void;
   initialWallet?: 'player' | 'affiliate';
 }
 
 export const AdminBalanceModal: React.FC<AdminBalanceModalProps> = ({
-  user,
+  user,planToken,onPlanSaved,
   isOpen,
   onClose,
   onSave,
@@ -87,7 +90,19 @@ export const AdminBalanceModal: React.FC<AdminBalanceModalProps> = ({
     ? (user.affiliateInfo?.affiliateBalance || 0)
     : user.balance;
 
-  const parsedAmount = parseFloat(amount) || 0;
+  const parsedAmount = Number(amount);
+  const validAmount = Number.isFinite(parsedAmount) && parsedAmount >= 0 &&
+    Number.isSafeInteger(Math.round(parsedAmount * 100)) &&
+    Math.abs(parsedAmount * 100 - Math.round(parsedAmount * 100)) < 1e-6;
+  const exceedsBalance = actionType === 'subtract' &&
+    Math.round(parsedAmount * 100) > Math.round(currentWalletBalance * 100);
+  const movesBalance = validAmount && (actionType === 'set'
+    ? Math.round(parsedAmount * 100) !== Math.round(currentWalletBalance * 100)
+    : parsedAmount > 0);
+  const adjustmentError = !validAmount || (actionType === 'set' && !amount.trim())
+    ? 'Informe um valor válido com até duas casas decimais.'
+    : exceedsBalance ? 'A saída não pode ultrapassar o saldo disponível.'
+    : movesBalance && !reason.trim() ? 'Informe o motivo da movimentação.' : '';
   let projectedBalance = currentWalletBalance;
   if (actionType === 'add') projectedBalance = currentWalletBalance + parsedAmount;
   else if (actionType === 'subtract') projectedBalance = Math.max(0, currentWalletBalance - parsedAmount);
@@ -95,11 +110,12 @@ export const AdminBalanceModal: React.FC<AdminBalanceModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading || adjustmentError) return;
     await onSave({
       userId: user.id,
       amount: parsedAmount,
       actionType,
-      reason,
+      reason: reason.trim(),
       targetWallet,
       minWithdraw: parseFloat(minWithdraw) || 100,
       withdrawFee: parseFloat(withdrawFee) || 0,
@@ -113,13 +129,13 @@ export const AdminBalanceModal: React.FC<AdminBalanceModalProps> = ({
   };
 
   const walletOptions = [
-    { id: 'player' as const, label: 'Jogo' },
+    { id: 'player' as const, label: 'Jogador' },
     { id: 'affiliate' as const, label: 'Afiliado' }
   ];
 
   const actionOptions = [
-    { id: 'add' as const, label: 'Adicionar (+)' },
-    { id: 'subtract' as const, label: 'Remover (-)' },
+    { id: 'add' as const, label: 'Entrada (+)' },
+    { id: 'subtract' as const, label: 'Saída (−)' },
     { id: 'set' as const, label: 'Definir saldo' }
   ];
 
@@ -135,9 +151,10 @@ export const AdminBalanceModal: React.FC<AdminBalanceModalProps> = ({
     <IOSModalSheet
       isOpen={isOpen}
       onClose={onClose}
-      title="Ajustar carteira"
+      title="Entradas e saídas da carteira"
       subtitle={`${user.name} · ${user.email}`}
     >
+      {isOpen&&(user.affiliateInfo||user.role==='affiliate')&&planToken&&<AdminAffiliatePlan userId={user.id} token={planToken} onSaved={onPlanSaved}/>}
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Wallet Selector Tabs */}
         <div className="space-y-1.5">
@@ -247,6 +264,7 @@ export const AdminBalanceModal: React.FC<AdminBalanceModalProps> = ({
             <input
               type="number"
               step="0.01"
+              min="0"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               placeholder="0,00"
@@ -257,7 +275,7 @@ export const AdminBalanceModal: React.FC<AdminBalanceModalProps> = ({
 
         {/* Reason */}
         <div className="space-y-1.5">
-          <label className="text-xs font-bold text-slate-700">Motivo do Ajuste (Opcional)</label>
+          <label className="text-xs font-bold text-slate-700">Motivo da movimentação</label>
           <input
             type="text"
             value={reason}
@@ -425,15 +443,17 @@ export const AdminBalanceModal: React.FC<AdminBalanceModalProps> = ({
           </div>
         )}
 
+        <p className="text-xs text-slate-600">Movimentação interna da carteira. Nenhum PIX é enviado ou gerado por este formulário.</p>
+        {adjustmentError && <p role="status" className="text-xs text-red-700">{adjustmentError}</p>}
         <div className="pt-3 flex gap-2">
           <IOSButton
             type="submit"
             variant="primary"
-            disabled={loading}
+            disabled={loading || !!adjustmentError}
             className="flex-1 h-11"
           >
             {loading ? <InexLoader compact /> : <CheckCircle2 className="w-4 h-4" />}
-            <span>Salvar Alterações</span>
+            <span>{movesBalance ? 'Registrar movimentação' : 'Salvar alterações'}</span>
           </IOSButton>
           <IOSButton
             type="button"
